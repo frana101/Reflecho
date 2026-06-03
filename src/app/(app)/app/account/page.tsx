@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RedoReconstruction } from "@/components/app-shell/redo-reconstruction";
 
-export const metadata = { title: "Account - Brain Mirror" };
+export const metadata = { title: "Account - Reflecho" };
 
 export default async function AccountPage() {
   const supabase = await createClient();

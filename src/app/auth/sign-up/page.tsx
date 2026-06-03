@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { AuthForm } from "@/components/auth/auth-form";
 
-export const metadata = { title: "Begin — Brain Mirror" };
+export const metadata = { title: "Begin — Reflecho" };
 
 export default function Page() {
   return (

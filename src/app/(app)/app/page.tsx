@@ -2,7 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 
-export const metadata = { title: "Overview - Brain Mirror" };
+export const metadata = { title: "Overview - Reflecho" };
 
 export default async function OverviewPage() {
   const supabase = await createClient();

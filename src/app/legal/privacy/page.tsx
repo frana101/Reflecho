@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Privacy - Brain Mirror" };
+export const metadata = { title: "Privacy - Reflecho" };
 
 export default function PrivacyPage() {
   return (
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         Privacy.
       </h1>
       <p className="mt-8 text-bone-muted font-light leading-relaxed">
-        Brain Mirror processes deeply personal data. We treat it as such. Your
+        Reflecho processes deeply personal data. We treat it as such. Your
         answers, dossier, conversations, and memory cells are stored encrypted
         at rest, accessible only to your account, and never shared with third
         parties for advertising. You may export or delete everything at any

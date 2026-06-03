@@ -17,15 +17,16 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Brain Mirror — Cognitive Reconstruction System",
+  title: "Reflecho — Reverse-engineer how you operate",
   description:
-    "An evolving AI system that reconstructs how you think. A psychological mirror, not a chatbot.",
+    "Behavioral intelligence assessment and strategic mirror advisor. Not a personality test — an operating system analysis with auditable evidence.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ),
   openGraph: {
-    title: "Brain Mirror",
-    description: "An evolving AI system that reconstructs how you think.",
+    title: "Reflecho",
+    description:
+      "Reverse-engineer your incentives, decisions, and blind spots. Then talk to the mirror.",
     type: "website",
   },
   robots: { index: true, follow: true },

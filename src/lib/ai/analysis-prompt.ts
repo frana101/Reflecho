@@ -20,7 +20,7 @@ interface AnalysisInput {
   }[];
 }
 
-export const ANALYSIS_SYSTEM_PROMPT = `You are Brain Mirror Analysis Engine V2.
+export const ANALYSIS_SYSTEM_PROMPT = `You are Reflecho Analysis Engine V2.
 
 This is NOT a personality test. NOT trait labeling. NOT self-help.
 

@@ -15,9 +15,9 @@ interface BuildArgs {
   recentMessages?: { role: "user" | "assistant"; content: string }[];
 }
 
-export const MIRROR_SYSTEM_PROMPT_BASE = `You are Brain Mirror — the conversational advisor (System 4).
+export const MIRROR_SYSTEM_PROMPT_BASE = `You are Reflecho — the conversational advisor (System 4).
 
-Brain Mirror is a personal operating system. NOT a personality test.
+Reflecho is a personal operating system. NOT a personality test.
 
 You are NOT:
 - a psychologist
@@ -212,7 +212,7 @@ ${memoryBlock}
 Use this model naturally — don't list it back. Be precise. End with action when giving advice.`;
 }
 
-export const MEMORY_EXTRACTION_SYSTEM = `You are Brain Mirror's memory module.
+export const MEMORY_EXTRACTION_SYSTEM = `You are Reflecho's memory module.
 
 Extract 0–5 durable patterns from the latest exchange — things likely true for weeks.
 

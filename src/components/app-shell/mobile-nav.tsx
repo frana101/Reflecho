@@ -31,8 +31,12 @@ export function MobileNav({ displayName }: { displayName: string }) {
         <div className="flex h-14 items-center justify-between px-4">
           <Link href="/app" className="flex items-center gap-2 min-w-0">
             <span className="inline-block h-2 w-2 bg-bone shrink-0" />
-            <span className="text-[10px] tracking-[0.28em] uppercase truncate">
-              {current}
+            <span className="text-[10px] tracking-[0.22em] uppercase truncate">
+              Reflecho
+              <span className="text-bone/40 normal-case tracking-normal">
+                {" "}
+                / {current}
+              </span>
             </span>
           </Link>
           <button

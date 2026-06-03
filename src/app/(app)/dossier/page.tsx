@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DossierView } from "@/components/dossier/dossier-view";
 import { dbRowToDossier } from "@/lib/types/dossier";
 
-export const metadata = { title: "Dossier - Brain Mirror" };
+export const metadata = { title: "Dossier - Reflecho" };
 
 export default async function DossierPage() {
   const supabase = await createClient();

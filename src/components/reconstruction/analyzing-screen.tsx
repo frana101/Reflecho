@@ -6,15 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const STAGES = [
-  "Indexing cognitive substrate...",
-  "Mapping cognitive architecture...",
-  "Detecting compensatory patterns...",
-  "Reconstructing identity structures...",
-  "Analyzing emotional regulation...",
-  "Tracing self-deception loops...",
-  "Modeling motivational engine...",
-  "Synthesizing trajectory analysis...",
-  "Compiling dossier...",
+  "Scoring reality processing...",
+  "Mapping driver hierarchy...",
+  "Building evidence chains...",
+  "Compressing root causes...",
+  "Calibrating perception bias...",
+  "Assigning operating patterns...",
+  "Generating core diagnosis...",
+  "Writing behavioral predictions...",
+  "Compiling operating report...",
 ];
 
 export function AnalyzingScreen({ displayName }: { displayName: string }) {

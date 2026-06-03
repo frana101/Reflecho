@@ -13,7 +13,7 @@ export function Sidebar({ displayName }: { displayName: string }) {
         <Link href="/" className="flex items-center gap-3">
           <span className="inline-block h-2 w-2 bg-bone" />
           <span className="text-[11px] tracking-[0.32em] uppercase">
-            Brain Mirror
+            Reflecho
           </span>
         </Link>
       </div>

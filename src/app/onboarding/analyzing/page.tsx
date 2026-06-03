@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AnalyzingScreen } from "@/components/reconstruction/analyzing-screen";
 
-export const metadata = { title: "Synthesizing - Brain Mirror" };
+export const metadata = { title: "Synthesizing - Reflecho" };
 
 export default async function AnalyzingPage() {
   const supabase = await createClient();

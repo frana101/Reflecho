@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Memory - Brain Mirror" };
+export const metadata = { title: "Memory - Reflecho" };
 
 const TYPE_LABELS: Record<string, string> = {
   theme: "Theme",

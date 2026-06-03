@@ -14,7 +14,7 @@ export default function AuthLayout({
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <span className="inline-block h-2 w-2 bg-bone" />
             <span className="text-[11px] tracking-[0.28em] uppercase">
-              Brain Mirror
+              Reflecho
             </span>
           </Link>
           <span className="hidden sm:inline text-[10px] tracking-[0.24em] uppercase text-bone/40">

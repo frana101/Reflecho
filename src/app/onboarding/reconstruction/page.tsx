@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ReconstructionFlow } from "@/components/reconstruction/reconstruction-flow";
 
-export const metadata = { title: "Reconstruction - Brain Mirror" };
+export const metadata = { title: "Reconstruction - Reflecho" };
 
 export default async function ReconstructionPage() {
   const supabase = await createClient();
