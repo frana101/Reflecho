@@ -85,7 +85,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
         >
           {step === 0 && (
             <div>
-              <h2 className="text-display-lg font-light tracking-tight text-balance">
+              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
                 What should the mirror call you?
               </h2>
               <p className="mt-4 text-bone-muted text-sm leading-relaxed max-w-md">
@@ -108,13 +108,13 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
           {step === 1 && (
             <div>
-              <h2 className="text-display-lg font-light tracking-tight text-balance">
+              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
                 Calibration: age range.
               </h2>
               <p className="mt-4 text-bone-muted text-sm leading-relaxed max-w-md">
                 Used only to calibrate cognitive baselines, not to label you.
               </p>
-              <div className="mt-12 grid grid-cols-3 gap-3">
+              <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {AGE_RANGES.map((r) => (
                   <button
                     key={r}
@@ -123,7 +123,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
                       setAge(r);
                       setTimeout(next, 120);
                     }}
-                    className={`h-14 border text-[13px] tracking-tight transition-all ${
+                    className={`min-h-[52px] border text-[13px] tracking-tight transition-all ${
                       age === r
                         ? "border-bone bg-bone/10 text-bone"
                         : "border-line text-bone-muted hover:border-bone/40 hover:text-bone"
@@ -138,7 +138,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
           {step === 2 && (
             <div>
-              <h2 className="text-display-lg font-light tracking-tight text-balance">
+              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
                 What is your work?
               </h2>
               <p className="mt-4 text-bone-muted text-sm leading-relaxed max-w-md">
@@ -161,7 +161,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
           {step === 3 && (
             <div>
-              <h2 className="text-display-lg font-light tracking-tight text-balance">
+              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
                 You are about to be seen.
               </h2>
               <p className="mt-6 text-bone-muted leading-relaxed max-w-lg">
@@ -195,12 +195,13 @@ export function IntakeForm({ initial }: IntakeFormProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-16 flex items-center justify-between">
+      <div className="mt-12 sm:mt-16 flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Button
           variant="ghost"
           size="md"
           onClick={back}
           disabled={step === 0 || submitting}
+          className="w-full sm:w-auto min-h-[48px]"
         >
           Back
         </Button>
@@ -209,7 +210,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
             size="md"
             onClick={next}
             disabled={!canAdvance}
-            className="min-w-[180px]"
+            className="w-full sm:min-w-[180px] min-h-[48px]"
           >
             Continue
           </Button>
@@ -218,7 +219,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
             size="md"
             onClick={submit}
             disabled={submitting}
-            className="min-w-[220px]"
+            className="w-full sm:min-w-[220px] min-h-[48px]"
           >
             {submitting ? "Initializing..." : "Begin Reconstruction"}
           </Button>

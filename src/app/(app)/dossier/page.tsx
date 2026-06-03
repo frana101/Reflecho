@@ -28,7 +28,7 @@ export default async function DossierPage() {
 
   if (!dossier) {
     return (
-      <div className="px-8 md:px-14 py-24 max-w-2xl">
+      <div className="px-4 sm:px-8 md:px-14 py-16 sm:py-24 max-w-2xl">
         <h1 className="text-display-md font-light tracking-tight">
           No profile yet.
         </h1>

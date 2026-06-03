@@ -17,7 +17,7 @@ export default async function AccountPage() {
     .maybeSingle();
 
   return (
-    <div className="px-8 md:px-14 py-12 md:py-20 max-w-3xl">
+    <div className="px-4 sm:px-8 md:px-14 py-10 sm:py-12 md:py-20 max-w-3xl">
       <div className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
         Account
       </div>
@@ -87,11 +87,11 @@ export default async function AccountPage() {
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid grid-cols-3 gap-6 py-5">
-      <dt className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-6 py-5">
+      <dt className="text-[10px] tracking-[0.28em] uppercase text-bone/40">
         {label}
       </dt>
-      <dd className="col-span-2 text-base font-light">{value}</dd>
+      <dd className="sm:col-span-2 text-base font-light break-words">{value}</dd>
     </div>
   );
 }

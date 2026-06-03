@@ -98,26 +98,28 @@ export function MirrorChat({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-0px)]">
-      <header className="border-b border-line px-8 py-5 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-[10px] tracking-[0.32em] uppercase text-bone/40">
-          <span className="inline-flex items-center gap-2">
+    <div className="flex flex-col h-full min-h-0">
+      <header className="border-b border-line px-4 sm:px-8 py-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between shrink-0">
+        <div className="flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone/40 min-w-0">
+          <span className="inline-flex items-center gap-2 shrink-0">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-bone animate-pulse-slow" />
-            Mirror Active
+            Mirror
           </span>
-          <span className="h-px w-8 bg-bone/20" />
-          <span>Subject / {displayName}</span>
+          <span className="h-px w-6 bg-bone/20 shrink-0 hidden sm:block" />
+          <span className="truncate">{displayName}</span>
         </div>
-        <span className="text-[10px] tracking-[0.32em] uppercase text-bone/30">
-          Session {conversationId ? conversationId.slice(0, 6) : "new"}
-        </span>
+        {conversationId && (
+          <span className="text-[10px] tracking-[0.24em] uppercase text-bone/30 shrink-0 hidden sm:inline">
+            Session {conversationId.slice(0, 6)}
+          </span>
+        )}
       </header>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-3xl px-8 py-12 space-y-10">
+      <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
+        <div className="mx-auto max-w-3xl px-4 sm:px-8 py-8 sm:py-12 space-y-8 sm:space-y-10">
           {messages.length === 0 && !pending && (
-            <div className="text-center py-24">
-              <h2 className="text-display-md font-light tracking-tight text-balance">
+            <div className="text-center py-12 sm:py-24">
+              <h2 className="text-2xl sm:text-display-md font-light tracking-tight text-balance">
                 Speak.
               </h2>
               <p className="mt-6 max-w-md mx-auto text-bone-muted leading-relaxed font-light">
@@ -191,11 +193,11 @@ export function MirrorChat({
         </div>
       </div>
 
-      <div className="border-t border-line bg-ink-0/70 backdrop-blur-xl">
-        <div className="mx-auto max-w-3xl px-8 py-5">
+      <div className="border-t border-line bg-ink-0/70 backdrop-blur-xl shrink-0 pb-safe">
+        <div className="mx-auto max-w-3xl px-4 sm:px-8 py-4 sm:py-5">
           <Textarea
             ref={inputRef}
-            placeholder="Type to the mirror. Precision over performance."
+            placeholder="Type to the mirror..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -213,16 +215,19 @@ export function MirrorChat({
                 send();
               }
             }}
-            rows={3}
+            rows={2}
             disabled={pending}
-            className="text-[15px] leading-relaxed min-h-[80px] font-light bg-transparent"
+            className="text-[15px] leading-relaxed min-h-[56px] sm:min-h-[80px] font-light bg-transparent"
           />
-          <div className="mt-3 flex items-center justify-between text-[10px] tracking-[0.32em] uppercase text-bone/30">
-            <span>enter to send / shift+enter for newline</span>
+          <div className="mt-3 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <span className="hidden sm:inline text-[10px] tracking-[0.28em] uppercase text-bone/30">
+              enter to send / shift+enter for newline
+            </span>
             <Button
-              size="sm"
+              size="md"
               onClick={send}
               disabled={pending || input.trim().length === 0}
+              className="w-full sm:w-auto min-h-[48px]"
             >
               Send
             </Button>

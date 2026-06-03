@@ -85,12 +85,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="border border-line bg-ink-100/40 p-10"
+      className="border border-line bg-ink-100/40 p-6 sm:p-10"
     >
       <span className="text-mono-track text-[10px] text-bone/40">
         {isSignUp ? "Initiate Reconstruction" : "Resume Protocol"}
       </span>
-      <h1 className="mt-4 text-display-md font-light tracking-tight">
+      <h1 className="mt-4 text-2xl sm:text-display-md font-light tracking-tight">
         {isSignUp ? "Begin." : "Continue."}
       </h1>
       <p className="mt-3 text-bone-muted text-sm leading-relaxed font-light">

@@ -3,7 +3,7 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="relative border-t border-line">
-      <div className="mx-auto max-w-7xl px-8 py-16 grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8 py-12 sm:py-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         <div className="col-span-2 md:col-span-2">
           <Link href="/" className="flex items-center gap-3">
             <span className="inline-block h-2 w-2 bg-bone" />
@@ -46,9 +46,9 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-line py-6">
-        <div className="mx-auto max-w-7xl px-8 flex items-center justify-between text-[10px] tracking-[0.32em] uppercase text-bone/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-[10px] tracking-[0.24em] uppercase text-bone/30 pb-safe">
           <span>© Brain Mirror — Cognitive Systems</span>
-          <span>Built for those who want to see themselves clearly.</span>
+          <span className="text-balance">Built for those who want to see themselves clearly.</span>
         </div>
       </div>
     </footer>

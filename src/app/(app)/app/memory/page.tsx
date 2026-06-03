@@ -34,7 +34,7 @@ export default async function MemoryPage() {
   }
 
   return (
-    <div className="px-8 md:px-14 py-12 md:py-20 max-w-5xl">
+    <div className="px-4 sm:px-8 md:px-14 py-10 sm:py-12 md:py-20 max-w-5xl">
       <div className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
         Long-term Memory
       </div>

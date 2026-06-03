@@ -12,7 +12,7 @@ export function Hero() {
 
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent" />
 
-      <div className="relative mx-auto w-full max-w-7xl px-8 pt-32 pb-16">
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-8 pt-28 sm:pt-32 pb-12 sm:pb-16">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -27,7 +27,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-12 text-display-2xl font-light tracking-tighter text-balance"
+          className="mt-10 sm:mt-12 text-4xl sm:text-display-2xl font-light tracking-tighter text-balance"
         >
           Brain
           <br />

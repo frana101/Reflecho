@@ -193,39 +193,47 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
   });
 
   return (
-    <div className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col">
+    <div className="relative w-full min-h-[calc(100dvh-4rem)] flex flex-col">
       <div className="sticky top-0 z-10 border-b border-line bg-ink-0/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-5xl px-8 py-5 flex items-center justify-between gap-6">
-          <div className="flex items-center gap-4 text-[10px] tracking-[0.32em] uppercase text-bone/40">
-            <span>Subject / {displayName}</span>
-            <span className="h-px w-8 bg-bone/20" />
-            <span>{question.category}</span>
+        <div className="mx-auto max-w-5xl px-4 sm:px-8 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone/40 min-w-0">
+            <span className="truncate">Subject / {displayName}</span>
+            <span className="h-px w-6 bg-bone/20 shrink-0 hidden sm:block" />
+            <span className="truncate hidden sm:inline">{question.category}</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between sm:justify-end gap-4">
             <button
               type="button"
               onClick={startOver}
-              className="text-[10px] tracking-[0.32em] uppercase text-bone/40 hover:text-bone transition-colors"
+              className="text-[10px] tracking-[0.28em] uppercase text-bone/40 hover:text-bone transition-colors min-h-[44px] px-2"
             >
               Start over
             </button>
-            <span className="h-3 w-px bg-bone/20" />
-            <span className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
+            <span className="h-3 w-px bg-bone/20 hidden sm:block" />
+            <span className="text-[10px] tracking-[0.28em] uppercase text-bone/40 tabular-nums">
               {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
-            <div className="hidden md:block h-px w-32 bg-line relative overflow-hidden">
-              <motion.div
-                initial={false}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-y-0 left-0 bg-bone"
-              />
-            </div>
+          </div>
+          <div className="h-px w-full bg-line relative overflow-hidden sm:hidden">
+            <motion.div
+              initial={false}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-y-0 left-0 bg-bone"
+            />
+          </div>
+          <div className="hidden md:block h-px w-32 bg-line relative overflow-hidden">
+            <motion.div
+              initial={false}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-y-0 left-0 bg-bone"
+            />
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-6 py-16">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={question.id}
@@ -251,24 +259,25 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
               />
             </div>
 
-            <div className="mt-12 flex items-center justify-between">
+            <div className="mt-10 sm:mt-12 flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
               <Button
                 variant="ghost"
                 size="md"
                 onClick={back}
                 disabled={index === 0 || submitting}
+                className="w-full sm:w-auto min-h-[48px]"
               >
                 Back
               </Button>
-              <div className="flex items-center gap-4">
-                <span className="text-[10px] tracking-[0.32em] uppercase text-bone/30">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                <span className="text-center sm:text-left text-[10px] tracking-[0.28em] uppercase text-bone/30">
                   {savingId === question.id ? "Saving..." : "Autosaved"}
                 </span>
                 <Button
                   size="md"
                   onClick={next}
                   disabled={!valid || submitting}
-                  className="min-w-[180px]"
+                  className="w-full sm:min-w-[180px] min-h-[48px]"
                 >
                   {index >= total - 1
                     ? submitting
@@ -279,7 +288,7 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
               </div>
             </div>
 
-            <div className="mt-16 text-[10px] tracking-[0.32em] uppercase text-bone/20">
+            <div className="mt-10 sm:mt-16 hidden md:block text-[10px] tracking-[0.32em] uppercase text-bone/20">
               cmd + enter to continue
             </div>
           </motion.div>
@@ -318,7 +327,7 @@ function QuestionInput({
             type="button"
             onClick={() => onChange({ choices: [c] })}
             className={cn(
-              "text-left border px-5 py-4 transition-all text-sm font-light leading-relaxed",
+              "text-left border px-4 sm:px-5 py-4 transition-all text-sm font-light leading-relaxed min-h-[52px]",
               isOn
                 ? "border-bone bg-bone/10 text-bone"
                 : "border-line text-bone-muted hover:border-bone/40 hover:text-bone",

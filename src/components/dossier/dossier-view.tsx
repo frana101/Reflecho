@@ -44,18 +44,18 @@ export function DossierView({
   const { archetypes, hierarchy } = dossier;
 
   return (
-    <article className="max-w-5xl mx-auto px-8 md:px-14 py-12 md:py-20">
-      <header className="border-b border-line pb-12">
-        <div className="flex items-center justify-between text-[10px] tracking-[0.32em] uppercase text-bone/40">
+    <article className="max-w-5xl mx-auto px-4 sm:px-8 md:px-14 py-10 sm:py-12 md:py-20">
+      <header className="border-b border-line pb-8 sm:pb-12">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[10px] tracking-[0.28em] uppercase text-bone/40">
           <span>Behavioral Intelligence Report</span>
-          <span>
+          <span className="tabular-nums">
             v{version} · {new Date(generatedAt).toLocaleDateString()}
           </span>
         </div>
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-10 text-display-xl font-extralight tracking-tighter"
+          className="mt-8 sm:mt-10 text-3xl sm:text-display-xl font-extralight tracking-tighter"
         >
           {displayName}
         </motion.h1>
@@ -371,7 +371,7 @@ export function DossierView({
         </section>
       ) : null}
 
-      <footer className="mt-24 border-t border-line pt-8 text-[10px] tracking-[0.32em] uppercase text-bone/30 flex justify-between">
+      <footer className="mt-24 border-t border-line pt-8 pb-safe text-[10px] tracking-[0.28em] uppercase text-bone/30 flex flex-col gap-3 sm:flex-row sm:justify-between">
         <span>End of report</span>
         <span>Continues in the mirror.</span>
       </footer>
@@ -446,9 +446,9 @@ function HierarchyColumn({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-[10px] tracking-[0.24em] uppercase text-bone/40">{label}</p>
-      <p className="mt-1 text-lg font-light capitalize">{value}</p>
+      <p className="mt-1 text-sm sm:text-lg font-light capitalize break-words leading-snug">{value}</p>
     </div>
   );
 }

@@ -21,13 +21,13 @@ export function CognitiveRadar({
   }));
 
   return (
-    <div className="w-full h-[420px]">
+    <div className="w-full h-[280px] sm:h-[420px]">
       <ResponsiveContainer width="100%" height="100%">
-        <RadarChart data={data} outerRadius="78%">
+        <RadarChart data={data} outerRadius="72%">
           <PolarGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="3 4" />
           <PolarAngleAxis
             dataKey="axis"
-            tick={{ fill: "rgba(245,245,245,0.55)", fontSize: 11, letterSpacing: "0.18em" }}
+            tick={{ fill: "rgba(245,245,245,0.55)", fontSize: 10, letterSpacing: "0.12em" }}
           />
           <PolarRadiusAxis
             domain={[0, 100]}

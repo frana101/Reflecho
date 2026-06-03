@@ -2,21 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { APP_NAV_ITEMS, isNavActive } from "@/lib/nav-items";
 import { cn } from "@/lib/utils";
-
-interface NavItem {
-  label: string;
-  href: string;
-  code: string;
-}
-
-const ITEMS: NavItem[] = [
-  { code: "00", label: "Overview", href: "/app" },
-  { code: "01", label: "Dossier", href: "/dossier" },
-  { code: "02", label: "Mirror", href: "/mirror" },
-  { code: "03", label: "Memory", href: "/app/memory" },
-  { code: "04", label: "Account", href: "/app/account" },
-];
 
 export function Sidebar({ displayName }: { displayName: string }) {
   const pathname = usePathname();
@@ -35,22 +22,20 @@ export function Sidebar({ displayName }: { displayName: string }) {
         <div className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
           Subject
         </div>
-        <div className="mt-2 text-base font-light tracking-tight">
+        <div className="mt-2 text-base font-light tracking-tight truncate">
           {displayName}
         </div>
       </div>
 
       <nav className="flex-1 py-4">
-        {ITEMS.map((item) => {
-          const active =
-            pathname === item.href ||
-            (item.href !== "/app" && pathname?.startsWith(item.href));
+        {APP_NAV_ITEMS.map((item) => {
+          const active = isNavActive(pathname, item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-4 px-6 py-3 text-[12px] tracking-[0.24em] uppercase transition-colors border-l-2",
+                "flex items-center gap-4 px-6 py-3 text-[12px] tracking-[0.24em] uppercase transition-colors border-l-2 min-h-[44px]",
                 active
                   ? "text-bone border-bone bg-bone/[0.04]"
                   : "text-bone-muted border-transparent hover:text-bone hover:bg-bone/[0.02]",
@@ -66,7 +51,7 @@ export function Sidebar({ displayName }: { displayName: string }) {
       <form action="/auth/sign-out" method="post" className="px-6 py-6 border-t border-line">
         <button
           type="submit"
-          className="text-[10px] tracking-[0.32em] uppercase text-bone/40 hover:text-bone transition-colors"
+          className="text-[10px] tracking-[0.32em] uppercase text-bone/40 hover:text-bone transition-colors min-h-[44px]"
         >
           Sign Out
         </button>

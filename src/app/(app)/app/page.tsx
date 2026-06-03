@@ -39,7 +39,7 @@ export default async function OverviewPage() {
   const memoryCount = (memCount as unknown as { count?: number } | null)?.count ?? 0;
 
   return (
-    <div className="px-8 md:px-14 py-12 md:py-20 max-w-6xl">
+    <div className="px-4 sm:px-8 md:px-14 py-10 sm:py-12 md:py-20 max-w-6xl">
       <div className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
         Operating Status
       </div>
