@@ -32,6 +32,26 @@ export async function POST() {
   if (!profile)
     return NextResponse.json({ error: "Profile missing" }, { status: 400 });
 
+  // Recover if a previous run saved the dossier but failed to flip status.
+  const { data: existingDossier } = await supabase
+    .from("cognitive_dossiers")
+    .select("id")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (existingDossier) {
+    await supabase
+      .from("profiles")
+      .update({
+        onboarding_status: "complete",
+        reconstruction_complete_at: new Date().toISOString(),
+      })
+      .eq("id", user.id);
+    return NextResponse.json({ ok: true, recovered: true });
+  }
+
   const { data: responses, error: rErr } = await supabase
     .from("reconstruction_responses")
     .select("*")
@@ -111,7 +131,22 @@ export async function POST() {
       ],
     });
     raw = completion.choices[0]?.message?.content ?? "";
+    if (!raw.trim()) {
+      return NextResponse.json(
+        { error: "OpenAI returned an empty response. Check your API key and model name." },
+        { status: 500 },
+      );
+    }
     dossier = JSON.parse(raw) as CognitiveDossier;
+    if (!dossier.core_diagnosis || !dossier.hierarchy) {
+      return NextResponse.json(
+        {
+          error:
+            "Analysis completed but the response was incomplete. Try retry synthesis.",
+        },
+        { status: 500 },
+      );
+    }
     dossier.reality_processing_score = {
       correct: realityProcessing.correct,
       total: realityProcessing.total,
@@ -125,6 +160,20 @@ export async function POST() {
     };
   } catch (e) {
     const msg = e instanceof Error ? e.message : "AI synthesis failed.";
+    if (e instanceof SyntaxError) {
+      return NextResponse.json(
+        {
+          error: `Invalid JSON from model: ${msg}. Try again.`,
+        },
+        { status: 500 },
+      );
+    }
+    if (msg.includes("OPENAI_API_KEY")) {
+      return NextResponse.json(
+        { error: "OPENAI_API_KEY is not set on the server." },
+        { status: 500 },
+      );
+    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 

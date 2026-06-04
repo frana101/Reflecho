@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 
 type Mode = "sign-in" | "sign-up";
 
@@ -21,8 +22,15 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [activeEmail, setActiveEmail] = useState<string | null>(null);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    void supabase.auth.getUser().then(({ data }) => {
+      setActiveEmail(data.user?.email ?? null);
+    });
+  }, [supabase]);
 
   const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,9 +103,36 @@ export function AuthForm({ mode }: { mode: Mode }) {
       </h1>
       <p className="mt-3 text-bone-muted text-sm leading-relaxed font-light">
         {isSignUp
-          ? "Create credentials to start the cognitive reconstruction protocol."
-          : "Authenticate to access your evolving cognitive dossier."}
+          ? "Create an account to start the operating system assessment."
+          : "Sign in to continue your assessment or dossier."}
       </p>
+
+      {activeEmail && (
+        <div className="mt-6 border border-line bg-ink-200/40 px-4 py-4 text-left">
+          <p className="text-[10px] tracking-[0.24em] uppercase text-bone/40">
+            Already signed in
+          </p>
+          <p className="mt-2 text-sm text-bone break-all">{activeEmail}</p>
+          <div className="mt-4 flex flex-col sm:flex-row gap-3">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="min-h-[44px]"
+              onClick={() => {
+                router.push(next);
+                router.refresh();
+              }}
+            >
+              Continue as this account
+            </Button>
+            <SignOutButton
+              label="Sign out & switch account"
+              className="min-h-[44px] flex items-center justify-center sm:justify-start"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="mt-8">
         <Button

@@ -49,6 +49,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isAuthPage && user && !pathname.startsWith("/auth/sign-out") && !pathname.startsWith("/auth/callback")) {
+    // Allow sign-in/sign-up while logged in so users can sign out and switch accounts.
+    if (pathname === "/auth/sign-in" || pathname === "/auth/sign-up") {
+      return response;
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/app";
     return NextResponse.redirect(url);
