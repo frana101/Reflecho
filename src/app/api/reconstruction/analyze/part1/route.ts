@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
 import {
-  ANALYSIS_SYSTEM_PROMPT,
-  buildAnalysisUserPrompt,
+  ANALYSIS_SYSTEM_PROMPT_PART1,
+  buildAnalysisUserPromptPart1,
 } from "@/lib/ai/analysis-prompt";
 import {
   synthesizeDossier,
   synthesisErrorResponse,
-  validateFullDossier,
+  validatePart1Dossier,
 } from "@/lib/ai/synthesize-dossier";
-import { loadAnalysisContext, saveDossier } from "@/lib/reconstruction/analysis-context";
+import { loadAnalysisContext } from "@/lib/reconstruction/analysis-context";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 export async function POST() {
   const ctx = await loadAnalysisContext();
@@ -23,27 +23,16 @@ export async function POST() {
     );
   }
 
-  const userPrompt = buildAnalysisUserPrompt(ctx.input);
-  const result = await synthesizeDossier(ANALYSIS_SYSTEM_PROMPT, userPrompt);
+  const userPrompt = buildAnalysisUserPromptPart1(ctx.input);
+  const result = await synthesizeDossier(ANALYSIS_SYSTEM_PROMPT_PART1, userPrompt);
   if (!result.ok) {
     return NextResponse.json(synthesisErrorResponse(result), { status: 500 });
   }
 
-  const validated = validateFullDossier(result.dossier);
+  const validated = validatePart1Dossier(result.dossier);
   if (!validated.ok) {
     return NextResponse.json(synthesisErrorResponse(validated), { status: 500 });
   }
 
-  const saved = await saveDossier(
-    ctx.userId,
-    result.dossier,
-    result.raw,
-    ctx.input.realityProcessing,
-    ctx.input.perceptionBias,
-  );
-  if (!saved.ok) {
-    return NextResponse.json({ error: saved.error }, { status: 500 });
-  }
-
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, partial: result.dossier, raw: result.raw });
 }

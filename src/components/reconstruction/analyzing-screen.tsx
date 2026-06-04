@@ -18,13 +18,27 @@ const STAGES = [
   "Compiling operating report...",
 ];
 
+function isTimeoutError(message: string, status: number) {
+  const m = message.toLowerCase();
+  return (
+    status === 504 ||
+    m.includes("timeout") ||
+    m.includes("timed out") ||
+    m.includes("function_invocation_timeout") ||
+    m.includes("task timed out")
+  );
+}
+
 function friendlyError(message: string) {
   const m = message.toLowerCase();
   if (m.includes("api key") || m.includes("incorrect api key") || m.includes("invalid_api_key")) {
     return "OpenAI API key is missing or invalid on the server. If you're on Vercel, check Environment Variables and redeploy.";
   }
-  if (m.includes("timeout") || m.includes("timed out") || m.includes("504")) {
-    return "Analysis timed out. On Vercel Hobby, functions stop after 10 seconds — upgrade to Pro or run locally for the full synthesis.";
+  if (m.includes("temperature") && m.includes("unsupported")) {
+    return "Server sent an invalid temperature setting for gpt-5.5. Redeploy the latest code — this was fixed.";
+  }
+  if (isTimeoutError(message, 0)) {
+    return "Analysis timed out on the server. Retrying in two shorter phases…";
   }
   if (m.includes("json") || m.includes("unexpected token")) {
     return "The model returned invalid JSON. Try again — if it keeps failing, the prompt may need a shorter run.";
@@ -40,18 +54,33 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
   const [retrying, setRetrying] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
-  const runAnalysis = useCallback(async () => {
+  const runSplitAnalysis = useCallback(async () => {
     setError(null);
     setRecoverable(false);
     setRetrying(true);
     try {
-      const res = await fetch("/api/reconstruction/analyze", {
+      const p1 = await fetch("/api/reconstruction/analyze/part1", { method: "POST" });
+      const p1Body = await p1.json().catch(() => ({}));
+      if (!p1.ok) {
+        setError(friendlyError(p1Body.error ?? "Phase 1 synthesis failed."));
+        setRecoverable(Boolean(p1Body.recover));
+        return;
+      }
+      if (p1Body.recovered) {
+        router.push("/dossier");
+        router.refresh();
+        return;
+      }
+
+      const p2 = await fetch("/api/reconstruction/analyze/part2", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ partial: p1Body.partial, raw: p1Body.raw }),
       });
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(friendlyError(body.error ?? "Analysis failed."));
-        setRecoverable(Boolean(body.recover));
+      const p2Body = await p2.json().catch(() => ({}));
+      if (!p2.ok) {
+        setError(friendlyError(p2Body.error ?? "Phase 2 synthesis failed."));
+        setRecoverable(Boolean(p2Body.recover));
         return;
       }
       router.push("/dossier");
@@ -63,6 +92,38 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
       setRetrying(false);
     }
   }, [router]);
+
+  const runAnalysis = useCallback(async () => {
+    setError(null);
+    setRecoverable(false);
+    setRetrying(true);
+    try {
+      const res = await fetch("/api/reconstruction/analyze", {
+        method: "POST",
+      });
+      const body = await res.json().catch(() => ({}));
+      if (res.ok) {
+        router.push("/dossier");
+        router.refresh();
+        return;
+      }
+      if (isTimeoutError(body.error ?? "", res.status)) {
+        await runSplitAnalysis();
+        return;
+      }
+      setError(friendlyError(body.error ?? "Analysis failed."));
+      setRecoverable(Boolean(body.recover));
+    } catch (e) {
+      const m = e instanceof Error ? e.message : "Unknown error";
+      if (isTimeoutError(m, 0)) {
+        await runSplitAnalysis();
+        return;
+      }
+      setError(friendlyError(m));
+    } finally {
+      setRetrying(false);
+    }
+  }, [router, runSplitAnalysis]);
 
   useEffect(() => {
     const cycle = setInterval(() => {
@@ -106,7 +167,7 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
           {!error && (
             <p className="mt-6 sm:mt-8 text-bone-muted text-sm max-w-md mx-auto leading-relaxed px-2">
               Cross-referencing your answers for incentive patterns, contradictions,
-              and what actually governs how you operate. This can take up to a minute.
+              and what actually governs how you operate. Usually 30–90 seconds.
             </p>
           )}
 
