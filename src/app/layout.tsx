@@ -17,16 +17,16 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reflecho — Reverse-engineer how you operate",
+  title: "Reflecho — Advice built around you",
   description:
-    "Behavioral intelligence assessment and strategic mirror advisor. Not a personality test — an operating system analysis with auditable evidence.",
+    "An AI mentor that learns how you think and gives advice based on you — not generic tips from a book or podcast.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ),
   openGraph: {
-    title: "Reflecho",
+    title: "Reflecho — Advice built around you",
     description:
-      "Reverse-engineer your incentives, decisions, and blind spots. Then talk to the mirror.",
+      "An AI mentor that learns how you think and gives advice based on you.",
     type: "website",
   },
   robots: { index: true, follow: true },

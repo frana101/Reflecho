@@ -6,37 +6,29 @@ import { Button } from "@/components/ui/button";
 
 const TIERS = [
   {
-    name: "Surface",
-    code: "T1",
-    price: "Free",
-    cadence: "to start",
-    summary:
-      "Run the assessment and preview your operating profile. Mirror access is limited.",
+    name: "Free",
+    price: "$0",
+    summary: "Answer the questions and see your profile. Try the mentor with limited chats.",
     features: [
-      "Full 45-item assessment",
-      "Operating report preview",
-      "Limited mirror sessions",
-      "No long-term memory",
+      "Full question set",
+      "Your personal profile",
+      "Limited mentor chats",
     ],
-    cta: { label: "Begin free", href: "/auth/sign-up" },
+    cta: { label: "Start free", href: "/auth/sign-up" },
     variant: "outline" as const,
   },
   {
-    name: "Mirror",
-    code: "T2",
+    name: "Full access",
     price: "$29",
     cadence: "month",
-    summary:
-      "Full behavioral intelligence report, unlimited mirror, and memory that compounds.",
+    summary: "Unlimited mentor chats and a profile that keeps learning as you talk.",
     features: [
-      "Complete operating report",
-      "Driver hierarchy & mechanism map",
-      "Evidence chains & predictions",
-      "Unlimited mirror advisor",
-      "Evolving session memory",
-      "Self-deception tracking over time",
+      "Everything in free",
+      "Unlimited mentor chats",
+      "Remembers what it learns about you",
+      "Full written profile",
     ],
-    cta: { label: "Activate mirror", href: "/auth/sign-up?tier=mirror" },
+    cta: { label: "Get full access", href: "/auth/sign-up?tier=mirror" },
     variant: "default" as const,
     featured: true,
   },
@@ -44,73 +36,62 @@ const TIERS = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="relative border-t border-line">
-      <div className="mx-auto max-w-7xl px-4 sm:px-8 py-20 sm:py-32 md:py-48">
-        <div className="mb-12 sm:mb-20 max-w-2xl">
-          <span className="text-[10px] tracking-[0.24em] uppercase text-bone/40">
-            Access / Tiers
-          </span>
-          <h2 className="mt-4 sm:mt-6 text-3xl sm:text-display-lg font-light tracking-tight text-balance">
-            Start with the assessment. Go deeper with the mirror.
+    <section id="pricing" className="border-b border-line bg-ink-50/30">
+      <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.7 }}
+        >
+          <h2 className="text-2xl sm:text-4xl font-light tracking-tight">
+            Pricing
           </h2>
-          <p className="mt-6 text-base font-light text-bone-muted leading-relaxed max-w-xl">
-            Reconstruction takes roughly 20 minutes. The mirror is where the
-            model keeps working — challenging blind spots and sharpening decisions.
+          <p className="mt-6 text-base sm:text-lg font-light text-bone-muted leading-relaxed">
+            Start free. Upgrade if you want unlimited access to your mentor.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {TIERS.map((t, i) => (
             <motion.div
               key={t.name}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-8%" }}
-              transition={{
-                duration: 0.9,
-                delay: i * 0.08,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className={`relative border flex flex-col p-6 sm:p-10 ${
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className={`flex flex-col border p-6 sm:p-8 ${
                 t.featured
-                  ? "border-bone/30 bg-ink-100/60"
-                  : "border-line bg-ink-50/40"
+                  ? "border-bone/30 bg-ink-100/50"
+                  : "border-line bg-ink-0/40"
               }`}
             >
-              {t.featured && (
-                <div className="absolute -top-px left-6 right-6 sm:left-10 sm:right-10 h-px bg-gradient-to-r from-transparent via-bone to-transparent" />
-              )}
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <span className="text-[10px] tracking-[0.24em] uppercase text-bone/40">
-                    {t.code}
-                  </span>
-                  <h3 className="mt-2 text-2xl sm:text-3xl font-light tracking-tight">
-                    {t.name}
-                  </h3>
-                </div>
-                <div className="sm:text-right shrink-0">
-                  <div className="text-2xl sm:text-3xl font-light tabular-nums">{t.price}</div>
-                  <div className="text-[10px] tracking-[0.24em] uppercase text-bone/40">
-                    / {t.cadence}
-                  </div>
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="text-xl sm:text-2xl font-light">{t.name}</h3>
+                <div className="text-right shrink-0">
+                  <span className="text-2xl font-light tabular-nums">{t.price}</span>
+                  {t.cadence && (
+                    <span className="block text-[10px] tracking-[0.16em] uppercase text-bone/40">
+                      / {t.cadence}
+                    </span>
+                  )}
                 </div>
               </div>
-              <p className="mt-6 text-sm sm:text-base text-bone-muted font-light leading-relaxed">
+              <p className="mt-4 text-sm sm:text-base font-light text-bone-muted leading-relaxed">
                 {t.summary}
               </p>
-              <ul className="mt-8 space-y-3 flex-1">
+              <ul className="mt-6 space-y-2 flex-1">
                 {t.features.map((f) => (
                   <li
                     key={f}
-                    className="text-sm font-light text-bone-muted flex items-start gap-3"
+                    className="text-sm font-light text-bone-muted flex gap-2"
                   >
-                    <span className="mt-2 h-px w-3 bg-bone/40 shrink-0" />
+                    <span className="text-bone/40 shrink-0">—</span>
                     {f}
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 sm:mt-10">
+              <div className="mt-8">
                 <Button asChild variant={t.variant} size="lg" className="w-full min-h-[48px]">
                   <Link href={t.cta.href}>{t.cta.label}</Link>
                 </Button>

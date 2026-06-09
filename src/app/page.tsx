@@ -1,9 +1,12 @@
 import { Nav } from "@/components/landing/nav";
 import { Hero } from "@/components/landing/hero";
-import { Sections } from "@/components/landing/sections";
-import { SystemLayers } from "@/components/landing/system";
+import { Problem } from "@/components/landing/problem";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { Comparison } from "@/components/landing/comparison";
+import { Examples } from "@/components/landing/examples";
+import { Faq } from "@/components/landing/faq";
 import { Pricing } from "@/components/landing/pricing";
-import { Transmission } from "@/components/landing/transmission";
+import { FinalCta } from "@/components/landing/final-cta";
 import { Footer } from "@/components/landing/footer";
 
 export default function Page() {
@@ -12,10 +15,13 @@ export default function Page() {
       <Nav />
       <main>
         <Hero />
-        <Sections />
-        <SystemLayers />
+        <Problem />
+        <HowItWorks />
+        <Comparison />
+        <Examples />
+        <Faq />
         <Pricing />
-        <Transmission />
+        <FinalCta />
       </main>
       <Footer />
     </>

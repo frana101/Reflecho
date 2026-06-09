@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { href: "#protocol", label: "Protocol" },
-  { href: "#system", label: "Output" },
-  { href: "#pricing", label: "Access" },
+  { href: "#problem", label: "The problem" },
+  { href: "#how-it-works", label: "How it works" },
+  { href: "#faq", label: "FAQ" },
+  { href: "#pricing", label: "Pricing" },
 ];
 
 export function Nav() {
@@ -25,19 +26,16 @@ export function Nav() {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink-0/90 backdrop-blur-xl pt-safe">
-        <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-8">
+        <div className="mx-auto flex h-14 sm:h-16 max-w-3xl items-center justify-between gap-3 px-4 sm:px-8">
           <Link
             href="/"
-            className="flex items-center gap-2.5 min-w-0 shrink"
+            className="text-sm sm:text-base font-light tracking-tight shrink-0"
             onClick={() => setOpen(false)}
           >
-            <span className="inline-block h-2 w-2 bg-bone shrink-0" />
-            <span className="text-[10px] sm:text-[11px] tracking-[0.22em] sm:tracking-[0.28em] uppercase font-medium truncate">
-              Reflecho
-            </span>
+            Reflecho
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-[11px] tracking-[0.24em] uppercase text-bone-muted">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-light text-bone-muted">
             {LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -50,14 +48,14 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-2 shrink-0">
-            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
-              <Link href="/auth/sign-in">Sign In</Link>
+            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex font-light">
+              <Link href="/auth/sign-in">Sign in</Link>
             </Button>
-            <Button asChild size="sm" className="hidden md:inline-flex">
-              <Link href="/auth/sign-up">Begin</Link>
+            <Button asChild size="sm" className="hidden md:inline-flex font-light">
+              <Link href="/auth/sign-up">Get started</Link>
             </Button>
-            <Button asChild size="sm" className="md:hidden min-h-[40px] px-3 text-[10px] tracking-[0.18em] uppercase">
-              <Link href="/auth/sign-up">Begin</Link>
+            <Button asChild size="sm" className="md:hidden min-h-[40px] px-3 font-light">
+              <Link href="/auth/sign-up">Start</Link>
             </Button>
             <button
               type="button"
@@ -107,7 +105,7 @@ export function Nav() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="min-h-[52px] flex items-center text-[12px] tracking-[0.22em] uppercase text-bone border-b border-line"
+                    className="min-h-[52px] flex items-center text-base font-light text-bone border-b border-line"
                   >
                     {link.label}
                   </Link>
@@ -115,15 +113,15 @@ export function Nav() {
                 <Link
                   href="/auth/sign-in"
                   onClick={() => setOpen(false)}
-                  className="min-h-[52px] flex items-center text-[12px] tracking-[0.22em] uppercase text-bone-muted"
+                  className="min-h-[52px] flex items-center text-base font-light text-bone-muted"
                 >
-                  Sign In
+                  Sign in
                 </Link>
               </nav>
               <div className="px-4 pb-4">
-                <Button asChild size="lg" className="w-full min-h-[48px]">
+                <Button asChild size="lg" className="w-full min-h-[48px] font-light">
                   <Link href="/auth/sign-up" onClick={() => setOpen(false)}>
-                    Begin assessment
+                    Get started free
                   </Link>
                 </Button>
               </div>
