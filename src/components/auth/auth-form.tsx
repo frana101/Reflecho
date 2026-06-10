@@ -12,16 +12,24 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 
 type Mode = "sign-in" | "sign-up";
 
+function finishAuth(
+  router: ReturnType<typeof useRouter>,
+  next: string,
+) {
+  router.push(next);
+  router.refresh();
+}
+
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") ?? "/app";
+  const defaultNext = mode === "sign-up" ? "/onboarding" : "/app";
+  const next = params.get("next") ?? defaultNext;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
   const [activeEmail, setActiveEmail] = useState<string | null>(null);
 
   const supabase = createClient();
@@ -36,30 +44,61 @@ export function AuthForm({ mode }: { mode: Mode }) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setInfo(null);
 
     try {
       if (mode === "sign-up") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
           },
         });
-        if (error) throw error;
-        setInfo(
-          "Check your email to confirm — then the protocol begins.",
-        );
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
+
+        if (signUpError) {
+          const alreadyExists =
+            signUpError.message.toLowerCase().includes("already registered") ||
+            signUpError.message.toLowerCase().includes("already been registered");
+
+          if (alreadyExists) {
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            });
+            if (signInError) throw signInError;
+            finishAuth(router, next);
+            return;
+          }
+
+          throw signUpError;
+        }
+
+        if (data.session) {
+          finishAuth(router, next);
+          return;
+        }
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
-        if (error) throw error;
-        router.push(next);
-        router.refresh();
+
+        if (!signInError) {
+          finishAuth(router, next);
+          return;
+        }
+
+        throw new Error(
+          "Account created but you could not sign in. In Supabase go to Authentication → Providers → Email and turn off “Confirm email”, then try again.",
+        );
       }
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      finishAuth(router, next);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
       setError(message);
@@ -95,16 +134,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       className="border border-line bg-ink-100/40 p-6 sm:p-10"
     >
-      <span className="text-mono-track text-[10px] text-bone/40">
-        {isSignUp ? "Initiate Reconstruction" : "Resume Protocol"}
-      </span>
-      <h1 className="mt-4 text-2xl sm:text-display-md font-light tracking-tight">
-        {isSignUp ? "Begin." : "Continue."}
+      <h1 className="text-2xl sm:text-display-md font-light tracking-tight">
+        {isSignUp ? "Create your account" : "Sign in"}
       </h1>
       <p className="mt-3 text-bone-muted text-sm leading-relaxed font-light">
         {isSignUp
-          ? "Create an account to start the operating system assessment."
-          : "Sign in to continue your assessment or dossier."}
+          ? "Enter your email and password to get started."
+          : "Welcome back."}
       </p>
 
       {activeEmail && (
@@ -119,10 +155,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
               size="sm"
               variant="outline"
               className="min-h-[44px]"
-              onClick={() => {
-                router.push(next);
-                router.refresh();
-              }}
+              onClick={() => finishAuth(router, next)}
             >
               Continue as this account
             </Button>
@@ -165,7 +198,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@signal.io"
+            placeholder="you@example.com"
           />
         </div>
         <div className="space-y-2">
@@ -187,25 +220,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
             {error}
           </div>
         )}
-        {info && (
-          <div className="border border-line bg-ink-200/40 px-4 py-3 text-[12px] text-bone-muted leading-relaxed">
-            {info}
-          </div>
-        )}
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
-          {loading
-            ? "Working…"
-            : isSignUp
-              ? "Begin Reconstruction"
-              : "Enter Mirror"}
+          {loading ? "Working…" : isSignUp ? "Begin" : "Sign in"}
         </Button>
       </form>
 
       <p className="mt-8 text-center text-[12px] text-bone-muted">
         {isSignUp ? (
           <>
-            Already enrolled?{" "}
+            Already have an account?{" "}
             <Link href="/auth/sign-in" className="text-bone hover:underline">
               Sign in
             </Link>
@@ -213,8 +237,11 @@ export function AuthForm({ mode }: { mode: Mode }) {
         ) : (
           <>
             No account yet?{" "}
-            <Link href="/auth/sign-up" className="text-bone hover:underline">
-              Begin
+            <Link
+              href="/auth/sign-up?next=/onboarding"
+              className="text-bone hover:underline"
+            >
+              Create one
             </Link>
           </>
         )}

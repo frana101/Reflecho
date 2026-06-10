@@ -17,16 +17,16 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reflecho — Advice built around you",
+  title: "Reflecho — Stop guessing what to do next",
   description:
-    "An AI mentor that learns how you think and gives advice based on you — not generic tips from a book or podcast.",
+    "A personal advisor that learns how you think and gives advice based on you — not generic tips that weren't built for you.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ),
   openGraph: {
-    title: "Reflecho — Advice built around you",
+    title: "Reflecho — Stop guessing what to do next",
     description:
-      "An AI mentor that learns how you think and gives advice based on you.",
+      "A personal advisor that learns how you think and gives advice based on you.",
     type: "website",
   },
   robots: { index: true, follow: true },

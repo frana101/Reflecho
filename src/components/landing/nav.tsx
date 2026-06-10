@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { href: "#problem", label: "The problem" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "#advisor", label: "How it works" },
+  { href: "#why", label: "Why it fails" },
+  { href: "#what", label: "What it does" },
 ];
 
 export function Nav() {
@@ -52,10 +51,10 @@ export function Nav() {
               <Link href="/auth/sign-in">Sign in</Link>
             </Button>
             <Button asChild size="sm" className="hidden md:inline-flex font-light">
-              <Link href="/auth/sign-up">Get started</Link>
+              <Link href="/auth/sign-up?next=/onboarding">Get Started</Link>
             </Button>
             <Button asChild size="sm" className="md:hidden min-h-[40px] px-3 font-light">
-              <Link href="/auth/sign-up">Start</Link>
+              <Link href="/auth/sign-up?next=/onboarding">Start</Link>
             </Button>
             <button
               type="button"
@@ -120,8 +119,8 @@ export function Nav() {
               </nav>
               <div className="px-4 pb-4">
                 <Button asChild size="lg" className="w-full min-h-[48px] font-light">
-                  <Link href="/auth/sign-up" onClick={() => setOpen(false)}>
-                    Get started free
+                  <Link href="/auth/sign-up?next=/onboarding" onClick={() => setOpen(false)}>
+                    Get Started
                   </Link>
                 </Button>
               </div>

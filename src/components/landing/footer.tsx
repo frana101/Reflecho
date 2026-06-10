@@ -9,15 +9,19 @@ export function Footer() {
             Reflecho
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed font-light text-bone-muted">
-            An AI mentor that learns how you think and gives advice based on you.
+            A personal advisor that learns how you think and gives advice based
+            on you.
           </p>
         </div>
         <div className="flex flex-col gap-3 text-sm font-light">
           <Link href="/auth/sign-in" className="text-bone-muted hover:text-bone">
             Sign in
           </Link>
-          <Link href="/auth/sign-up" className="text-bone-muted hover:text-bone">
-            Get started
+          <Link
+            href="/auth/sign-up?next=/onboarding"
+            className="text-bone-muted hover:text-bone"
+          >
+            Get Started
           </Link>
           <Link href="/legal/privacy" className="text-bone-muted hover:text-bone">
             Privacy
