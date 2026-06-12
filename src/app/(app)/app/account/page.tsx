@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RedoReconstruction } from "@/components/app-shell/redo-reconstruction";
+import { RegenerateDossier } from "@/components/app-shell/regenerate-dossier";
 
 export const metadata = { title: "Account - Reflecho" };
 
@@ -72,7 +73,8 @@ export default async function AccountPage() {
         </div>
       )}
 
-      <div className="mt-14">
+      <div className="mt-14 space-y-6">
+        {profile?.onboarding_status === "complete" && <RegenerateDossier />}
         <RedoReconstruction />
       </div>
 

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DossierView } from "@/components/dossier/dossier-view";
+import { RegenerateDossier } from "@/components/app-shell/regenerate-dossier";
 import { dbRowToDossier } from "@/lib/types/dossier";
 
 export const metadata = { title: "Dossier - Reflecho" };
@@ -46,12 +47,17 @@ export default async function DossierPage() {
   const composed = dbRowToDossier(dossier);
 
   return (
-    <DossierView
-      displayName={profile?.display_name ?? "Subject"}
-      occupation={profile?.occupation}
-      generatedAt={dossier.created_at}
-      version={dossier.version}
-      dossier={composed}
-    />
+    <>
+      <DossierView
+        displayName={profile?.display_name ?? "Subject"}
+        occupation={profile?.occupation}
+        generatedAt={dossier.created_at}
+        version={dossier.version}
+        dossier={composed}
+      />
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 md:px-14 pb-16 sm:pb-20">
+        <RegenerateDossier compact />
+      </div>
+    </>
   );
 }
