@@ -34,13 +34,7 @@ export async function POST() {
     return NextResponse.json(synthesisErrorResponse(validated), { status: 500 });
   }
 
-  const saved = await saveDossier(
-    ctx.userId,
-    result.dossier,
-    result.raw,
-    ctx.input.realityProcessing,
-    ctx.input.perceptionBias,
-  );
+  const saved = await saveDossier(ctx.userId, result.dossier, result.raw);
   if (!saved.ok) {
     return NextResponse.json({ error: saved.error }, { status: 500 });
   }

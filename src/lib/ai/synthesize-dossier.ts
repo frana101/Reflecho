@@ -44,43 +44,28 @@ export async function synthesizeDossier(
 }
 
 export function validateFullDossier(dossier: CognitiveDossier): SynthesisResult {
-  if (!dossier.core_diagnosis || !dossier.hierarchy) {
+  if (!dossier.core_diagnosis?.trim()) {
     return {
       ok: false,
       kind: "incomplete",
-      error: "Analysis completed but the response was incomplete. Try retry synthesis.",
+      error: "Analysis completed but core diagnosis was missing. Try again.",
+    };
+  }
+  if (!dossier.archetype?.name?.trim()) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but archetype was missing. Try again.",
+    };
+  }
+  if (!dossier.drivers?.length || !dossier.action_plan?.length) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but the report was incomplete. Try again.",
     };
   }
   return { ok: true, dossier, raw: "" };
-}
-
-export function validatePart1Dossier(dossier: CognitiveDossier): SynthesisResult {
-  if (!dossier.core_diagnosis || !dossier.hierarchy || !dossier.radar_scores) {
-    return {
-      ok: false,
-      kind: "incomplete",
-      error: "Phase 1 synthesis was incomplete. Try again.",
-    };
-  }
-  return { ok: true, dossier, raw: "" };
-}
-
-export function validatePart2Dossier(dossier: Partial<CognitiveDossier>): SynthesisResult {
-  if (!dossier.evidence_chains?.length || !dossier.behavioral_predictions?.length) {
-    return {
-      ok: false,
-      kind: "incomplete",
-      error: "Phase 2 synthesis was incomplete. Try again.",
-    };
-  }
-  return { ok: true, dossier: dossier as CognitiveDossier, raw: "" };
-}
-
-export function mergeDossierParts(
-  part1: CognitiveDossier,
-  part2: Partial<CognitiveDossier>,
-): CognitiveDossier {
-  return { ...part1, ...part2 };
 }
 
 export function synthesisErrorResponse(result: Extract<SynthesisResult, { ok: false }>) {

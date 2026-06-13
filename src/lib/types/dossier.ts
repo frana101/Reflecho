@@ -1,287 +1,211 @@
-export type RadarKey =
-  | "reality_processing"
-  | "decision_architecture"
-  | "identity_architecture"
-  | "threat_architecture"
-  | "social_operating_system"
-  | "execution_system"
-  | "self_deception_architecture";
-
-export type ConfidenceLevel = "weak" | "moderate" | "strong";
-
+/** @deprecated Internal scoring only — not shown in the report. */
 export type PerceptionQuadrant =
   | "elite"
   | "pattern_seer"
   | "misses_manipulation"
   | "paranoid_interpreter";
 
-export interface DossierSection {
-  summary: string;
-  bullets: string[];
-  confidence?: ConfidenceLevel;
-  confidence_pct?: number;
-}
-
-export interface RankedHierarchyItem {
-  rank: number;
-  label: string;
-  score_pct: number;
-  explanation: string;
-  evidence: string[];
-  confidence: ConfidenceLevel;
-  confidence_pct: number;
-}
-
-export interface EvidenceChain {
-  claim: string;
-  chain: { question_id: string; signal: string }[];
-  inference: string;
-  confidence_pct: number;
-  evidence_count: number;
-  counter_evidence: string[];
-  counter_evidence_count: number;
-}
-
-export interface ArchetypeAssignment {
+export interface DossierArchetype {
   name: string;
-  score_pct: number;
-  core_drive: string;
-  weapon: string;
-  blind_spot: string;
+  description: string;
+  strength: string;
+  weakness: string;
 }
 
-export interface MechanismLink {
+export interface MechanismMapItem {
   driver: string;
   threat: string;
-  coping_strategy: string;
-  behavior: string;
+  response: string;
+  result: string;
 }
 
-export interface RootCause {
-  rank: number;
-  mechanism: string;
-  explains: string[];
-  coverage_pct: number;
-  confidence_pct: number;
-  evidence: string[];
-}
-
-export interface BehavioralPrediction {
-  situation: string;
-  prediction: string;
-  mechanism: string;
-  confidence_pct: number;
+export interface BlindSpotItem {
+  pattern: string;
+  cost: string;
 }
 
 export interface SelfDeceptionItem {
-  claim: string;
-  evidence_for: string[];
-  evidence_against: string[];
-  inference: string;
-  confidence_pct: number;
+  belief: string;
+  why_it_feels_true: string;
+  what_may_be_happening: string;
 }
 
-export interface PerceptionCalibration {
-  accuracy_pct: number;
-  bias_level: "low" | "moderate" | "high";
-  quadrant: PerceptionQuadrant;
-  summary: string;
+export interface PredictionItem {
+  situation: string;
+  prediction: string;
+}
+
+export interface MemorySeed {
+  memory_type:
+    | "theme"
+    | "fear"
+    | "goal"
+    | "contradiction"
+    | "behavioral_pattern"
+    | "emotional_state"
+    | "recurring_phrase"
+    | "motivation"
+    | "identity"
+    | "trigger";
+  content: string;
+  evidence?: string;
 }
 
 export interface CognitiveDossier {
   core_diagnosis: string;
-  summary: string;
-  hierarchy: {
-    core_drivers: RankedHierarchyItem[];
-    core_threats: RankedHierarchyItem[];
-    core_constraints: RankedHierarchyItem[];
-  };
-  perception_calibration: PerceptionCalibration;
-  reality_processing_score: {
-    correct: number;
-    total: number;
-    accuracy_pct: number;
-    summary: string;
-  };
-  archetypes: {
-    primary: ArchetypeAssignment;
-    secondary: ArchetypeAssignment;
-    shadow: ArchetypeAssignment;
-  };
-  evidence_chains: EvidenceChain[];
-  mechanism_map: MechanismLink[];
-  root_causes: RootCause[];
-  self_deception_detector: SelfDeceptionItem[];
-  behavioral_predictions: BehavioralPrediction[];
-  strategic_adaptations: string[];
-  reality_processing: DossierSection;
-  decision_architecture: DossierSection;
-  identity_architecture: DossierSection;
-  threat_architecture: DossierSection;
-  social_operating_system: DossierSection;
-  execution_system: DossierSection;
-  self_deception_architecture: DossierSection;
-  blind_spot_architecture: {
-    summary: string;
-    items: {
-      pattern: string;
-      evidence: string;
-      likely_cost: string;
-      confidence_pct: number;
-      evidence_count: number;
-      counter_evidence: string[];
-    }[];
-  };
-  radar_scores: Record<RadarKey, number>;
-  memory_seeds: {
-    memory_type:
-      | "theme"
-      | "fear"
-      | "goal"
-      | "contradiction"
-      | "behavioral_pattern"
-      | "emotional_state"
-      | "recurring_phrase"
-      | "motivation"
-      | "identity"
-      | "trigger";
-    content: string;
-    evidence?: string;
-  }[];
+  archetype: DossierArchetype;
+  drivers: string[];
+  threats: string[];
+  constraints: string[];
+  mechanism_map: MechanismMapItem[];
+  blind_spots: BlindSpotItem[];
+  self_deception: SelfDeceptionItem[];
+  predictions: PredictionItem[];
+  action_plan: string[];
+  memory_seeds: MemorySeed[];
 }
 
-export const RADAR_LABELS: Record<RadarKey, string> = {
-  reality_processing: "Reality",
-  decision_architecture: "Decisions",
-  identity_architecture: "Identity",
-  threat_architecture: "Threats",
-  social_operating_system: "Social",
-  execution_system: "Execution",
-  self_deception_architecture: "Self-deception",
-};
-
-export const ARCHETYPE_FRAMEWORK = [
-  "Strategist",
-  "Builder",
-  "Sovereign",
-  "Operator",
-  "Scholar",
-  "Commander",
-  "Architect",
-  "Catalyst",
-  "Connector",
-  "Competitor",
+export const ARCHETYPE_NAMES = [
+  "The Sovereign",
+  "The Architect",
+  "The Strategist",
+  "The Builder",
+  "The Competitor",
+  "The Explorer",
+  "The Commander",
+  "The Analyst",
+  "The Operator",
+  "The Scholar",
+  "The Catalyst",
+  "The Connector",
 ] as const;
 
-/** Store V2 analysis in trajectory_analysis.analysis_v2 for full round-trip. */
-export function dossierToDbRow(d: CognitiveDossier) {
-  const archetypeLine = `${d.archetypes.primary.name} ${d.archetypes.primary.score_pct}% · ${d.archetypes.secondary.name} ${d.archetypes.secondary.score_pct}%`;
+/** Legacy V2 shape — used only when loading old dossiers. */
+interface LegacyDossierV2 {
+  core_diagnosis?: string;
+  summary?: string;
+  archetypes?: {
+    primary?: { name?: string; core_drive?: string; blind_spot?: string; weapon?: string };
+  };
+  hierarchy?: {
+    core_drivers?: { label?: string; explanation?: string }[];
+    core_threats?: { label?: string; explanation?: string }[];
+    core_constraints?: { label?: string; explanation?: string }[];
+  };
+  mechanism_map?: { driver?: string; threat?: string; coping_strategy?: string; behavior?: string }[];
+  blind_spot_architecture?: { items?: { pattern?: string; likely_cost?: string }[] };
+  self_deception_detector?: {
+    claim?: string;
+    evidence_for?: string[];
+    inference?: string;
+  }[];
+  behavioral_predictions?: { situation?: string; prediction?: string }[];
+  strategic_adaptations?: string[];
+  memory_seeds?: MemorySeed[];
+}
+
+function migrateLegacyV2(v2: LegacyDossierV2): CognitiveDossier {
+  const primary = v2.archetypes?.primary;
+  const name = primary?.name
+    ? primary.name.startsWith("The ")
+      ? primary.name
+      : `The ${primary.name}`
+    : "The Strategist";
+
   return {
-    summary: `${d.core_diagnosis}\n\n${archetypeLine}\n\n${d.summary}`,
-    cognitive_profile: d.reality_processing,
-    motivational_engine: d.decision_architecture,
-    identity_structure: d.identity_architecture,
-    emotional_architecture: d.threat_architecture,
-    execution_architecture: d.execution_system,
-    social_dynamics: d.social_operating_system,
-    blind_spots: d.blind_spot_architecture,
-    trajectory_analysis: {
-      analysis_v2: d,
-      reality_processing_score: d.reality_processing_score,
-      perception_calibration: d.perception_calibration,
-      behavioral_predictions: d.behavioral_predictions,
-      strategic_adaptations: d.strategic_adaptations,
+    core_diagnosis: v2.core_diagnosis ?? v2.summary ?? "",
+    archetype: {
+      name,
+      description: primary?.core_drive ?? "",
+      strength: primary?.weapon ?? "",
+      weakness: primary?.blind_spot ?? "",
     },
-    radar_scores: d.radar_scores,
+    drivers:
+      v2.hierarchy?.core_drivers?.slice(0, 3).map((d) => d.label ?? d.explanation ?? "") ??
+      [],
+    threats:
+      v2.hierarchy?.core_threats?.slice(0, 3).map((t) => t.label ?? t.explanation ?? "") ??
+      [],
+    constraints:
+      v2.hierarchy?.core_constraints
+        ?.slice(0, 3)
+        .map((c) => c.label ?? c.explanation ?? "") ?? [],
+    mechanism_map:
+      v2.mechanism_map?.map((m) => ({
+        driver: m.driver ?? "",
+        threat: m.threat ?? "",
+        response: m.coping_strategy ?? "",
+        result: m.behavior ?? "",
+      })) ?? [],
+    blind_spots:
+      v2.blind_spot_architecture?.items?.map((b) => ({
+        pattern: b.pattern ?? "",
+        cost: b.likely_cost ?? "",
+      })) ?? [],
+    self_deception:
+      v2.self_deception_detector?.slice(0, 3).map((s) => ({
+        belief: s.claim ?? "",
+        why_it_feels_true: s.evidence_for?.join(". ") ?? "",
+        what_may_be_happening: s.inference ?? "",
+      })) ?? [],
+    predictions:
+      v2.behavioral_predictions?.slice(0, 5).map((p) => ({
+        situation: p.situation ?? "",
+        prediction: p.prediction ?? "",
+      })) ?? [],
+    action_plan: v2.strategic_adaptations?.slice(0, 5) ?? [],
+    memory_seeds: v2.memory_seeds ?? [],
+  };
+}
+
+export function dossierToDbRow(d: CognitiveDossier) {
+  return {
+    summary: `${d.archetype.name}\n\n${d.core_diagnosis}`,
+    cognitive_profile: null,
+    motivational_engine: null,
+    identity_structure: null,
+    emotional_architecture: null,
+    execution_architecture: null,
+    social_dynamics: null,
+    blind_spots: { items: d.blind_spots },
+    trajectory_analysis: { analysis_v3: d },
+    radar_scores: null,
   };
 }
 
 export function dbRowToDossier(row: {
   summary?: string | null;
-  cognitive_profile?: DossierSection | null;
-  motivational_engine?: DossierSection | null;
-  identity_structure?: DossierSection | null;
-  emotional_architecture?: DossierSection | null;
-  execution_architecture?: DossierSection | null;
-  social_dynamics?: DossierSection | null;
-  blind_spots?: CognitiveDossier["blind_spot_architecture"] | null;
-  trajectory_analysis?: { analysis_v2?: CognitiveDossier } | null;
-  radar_scores?: Record<string, number> | null;
+  trajectory_analysis?: {
+    analysis_v3?: CognitiveDossier;
+    analysis_v2?: LegacyDossierV2;
+  } | null;
 }): CognitiveDossier {
-  const v2 = row.trajectory_analysis?.analysis_v2;
-  if (v2) {
-    return { ...v2, memory_seeds: v2.memory_seeds ?? [] };
+  const v3 = row.trajectory_analysis?.analysis_v3;
+  if (v3) {
+    return { ...v3, memory_seeds: v3.memory_seeds ?? [] };
   }
 
-  const defaultRadar: Record<RadarKey, number> = {
-    reality_processing: 50,
-    decision_architecture: 50,
-    identity_architecture: 50,
-    threat_architecture: 50,
-    social_operating_system: 50,
-    execution_system: 50,
-    self_deception_architecture: 50,
-  };
+  const v2 = row.trajectory_analysis?.analysis_v2;
+  if (v2) {
+    return migrateLegacyV2(v2);
+  }
 
-  const rawSummary = row.summary ?? "";
-  const lines = rawSummary.split("\n\n");
   return {
-    core_diagnosis: lines[0] ?? rawSummary,
-    summary: lines.slice(2).join("\n\n") || lines[1] || "",
-    hierarchy: { core_drivers: [], core_threats: [], core_constraints: [] },
-    perception_calibration: {
-      accuracy_pct: 0,
-      bias_level: "moderate",
-      quadrant: "misses_manipulation",
-      summary: "",
+    core_diagnosis: row.summary ?? "",
+    archetype: {
+      name: "The Strategist",
+      description: "",
+      strength: "",
+      weakness: "",
     },
-    reality_processing_score: {
-      correct: 0,
-      total: 15,
-      accuracy_pct: 0,
-      summary: "",
-    },
-    archetypes: {
-      primary: {
-        name: "Strategist",
-        score_pct: 0,
-        core_drive: "",
-        weapon: "",
-        blind_spot: "",
-      },
-      secondary: {
-        name: "Builder",
-        score_pct: 0,
-        core_drive: "",
-        weapon: "",
-        blind_spot: "",
-      },
-      shadow: {
-        name: "Operator",
-        score_pct: 0,
-        core_drive: "",
-        weapon: "",
-        blind_spot: "",
-      },
-    },
-    evidence_chains: [],
+    drivers: [],
+    threats: [],
+    constraints: [],
     mechanism_map: [],
-    root_causes: [],
-    self_deception_detector: [],
-    behavioral_predictions: [],
-    strategic_adaptations: [],
-    reality_processing: row.cognitive_profile ?? { summary: "", bullets: [] },
-    decision_architecture: row.motivational_engine ?? { summary: "", bullets: [] },
-    identity_architecture: row.identity_structure ?? { summary: "", bullets: [] },
-    threat_architecture: row.emotional_architecture ?? { summary: "", bullets: [] },
-    social_operating_system: row.social_dynamics ?? { summary: "", bullets: [] },
-    execution_system: row.execution_architecture ?? { summary: "", bullets: [] },
-    self_deception_architecture: { summary: "", bullets: [] },
-    blind_spot_architecture: row.blind_spots ?? {
-      summary: "",
-      items: [],
-    },
-    radar_scores: { ...defaultRadar, ...(row.radar_scores as Record<RadarKey, number>) },
+    blind_spots: [],
+    self_deception: [],
+    predictions: [],
+    action_plan: [],
     memory_seeds: [],
   };
 }

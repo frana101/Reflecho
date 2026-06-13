@@ -1,4 +1,5 @@
-import type { CognitiveDossier, PerceptionQuadrant } from "@/lib/types/dossier";
+import type { PerceptionQuadrant } from "@/lib/types/dossier";
+import { ARCHETYPE_NAMES } from "@/lib/types/dossier";
 import { CATEGORIES, TOTAL_QUESTIONS, type RealityProcessingScore } from "@/data/questions";
 
 export interface AnalysisPromptInput {
@@ -20,214 +21,127 @@ export interface AnalysisPromptInput {
   }[];
 }
 
-const OUTPUT_LIMITS = `Keep output compact: top-3 hierarchy items per list; 4 evidence_chains; 3 root_causes; 4 self_deception items; 5 behavioral_predictions; 3 bullets per dimension section; 6 memory_seeds max. Tight prose.`;
-
 export const ANALYSIS_JSON_SCHEMA = `{
   "core_diagnosis": string,
-  "summary": string,
-  "hierarchy": {
-    "core_drivers": [{ "rank": number, "label": string, "score_pct": number, "explanation": string, "evidence": string[], "confidence": "weak"|"moderate"|"strong", "confidence_pct": number }],
-    "core_threats": [{ "rank": number, "label": string, "score_pct": number, "explanation": string, "evidence": string[], "confidence": "weak"|"moderate"|"strong", "confidence_pct": number }],
-    "core_constraints": [{ "rank": number, "label": string, "score_pct": number, "explanation": string, "evidence": string[], "confidence": "weak"|"moderate"|"strong", "confidence_pct": number }]
+  "archetype": {
+    "name": string,
+    "description": string,
+    "strength": string,
+    "weakness": string
   },
-  "perception_calibration": {
-    "accuracy_pct": number,
-    "bias_level": "low"|"moderate"|"high",
-    "quadrant": "elite"|"pattern_seer"|"misses_manipulation"|"paranoid_interpreter",
-    "summary": string
-  },
-  "reality_processing_score": { "correct": number, "total": number, "accuracy_pct": number, "summary": string },
-  "archetypes": {
-    "primary": { "name": string, "score_pct": number, "core_drive": string, "weapon": string, "blind_spot": string },
-    "secondary": { "name": string, "score_pct": number, "core_drive": string, "weapon": string, "blind_spot": string },
-    "shadow": { "name": string, "score_pct": number, "core_drive": string, "weapon": string, "blind_spot": string }
-  },
-  "evidence_chains": [{
-    "claim": string,
-    "chain": [{ "question_id": string, "signal": string }],
-    "inference": string,
-    "confidence_pct": number,
-    "evidence_count": number,
-    "counter_evidence": string[],
-    "counter_evidence_count": number
+  "drivers": [string, string, string],
+  "threats": [string, string, string],
+  "constraints": [string, string, string],
+  "mechanism_map": [{
+    "driver": string,
+    "threat": string,
+    "response": string,
+    "result": string
   }],
-  "mechanism_map": [{ "driver": string, "threat": string, "coping_strategy": string, "behavior": string }],
-  "root_causes": [{ "rank": number, "mechanism": string, "explains": string[], "coverage_pct": number, "confidence_pct": number, "evidence": string[] }],
-  "self_deception_detector": [{ "claim": string, "evidence_for": string[], "evidence_against": string[], "inference": string, "confidence_pct": number }],
-  "behavioral_predictions": [{ "situation": string, "prediction": string, "mechanism": string, "confidence_pct": number }],
-  "strategic_adaptations": string[],
-  "reality_processing": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "decision_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "identity_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "threat_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "social_operating_system": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "execution_system": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "self_deception_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "blind_spot_architecture": {
-    "summary": string,
-    "items": [{ "pattern": string, "evidence": string, "likely_cost": string, "confidence_pct": number, "evidence_count": number, "counter_evidence": string[] }]
-  },
-  "radar_scores": {
-    "reality_processing": number,
-    "decision_architecture": number,
-    "identity_architecture": number,
-    "threat_architecture": number,
-    "social_operating_system": number,
-    "execution_system": number,
-    "self_deception_architecture": number
-  },
-  "memory_seeds": [
-    { "memory_type": "theme"|"fear"|"goal"|"contradiction"|"behavioral_pattern"|"emotional_state"|"recurring_phrase"|"motivation"|"identity"|"trigger", "content": string, "evidence": string }
-  ]
-}`;
-
-export const ANALYSIS_JSON_SCHEMA_PART1 = `{
-  "core_diagnosis": string,
-  "summary": string,
-  "hierarchy": {
-    "core_drivers": [{ "rank": number, "label": string, "score_pct": number, "explanation": string, "evidence": string[], "confidence": "weak"|"moderate"|"strong", "confidence_pct": number }],
-    "core_threats": [{ "rank": number, "label": string, "score_pct": number, "explanation": string, "evidence": string[], "confidence": "weak"|"moderate"|"strong", "confidence_pct": number }],
-    "core_constraints": [{ "rank": number, "label": string, "score_pct": number, "explanation": string, "evidence": string[], "confidence": "weak"|"moderate"|"strong", "confidence_pct": number }]
-  },
-  "perception_calibration": {
-    "accuracy_pct": number,
-    "bias_level": "low"|"moderate"|"high",
-    "quadrant": "elite"|"pattern_seer"|"misses_manipulation"|"paranoid_interpreter",
-    "summary": string
-  },
-  "reality_processing_score": { "correct": number, "total": number, "accuracy_pct": number, "summary": string },
-  "archetypes": {
-    "primary": { "name": string, "score_pct": number, "core_drive": string, "weapon": string, "blind_spot": string },
-    "secondary": { "name": string, "score_pct": number, "core_drive": string, "weapon": string, "blind_spot": string },
-    "shadow": { "name": string, "score_pct": number, "core_drive": string, "weapon": string, "blind_spot": string }
-  },
-  "reality_processing": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "decision_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "identity_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "threat_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "social_operating_system": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "execution_system": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "self_deception_architecture": { "summary": string, "bullets": string[], "confidence_pct": number },
-  "radar_scores": {
-    "reality_processing": number,
-    "decision_architecture": number,
-    "identity_architecture": number,
-    "threat_architecture": number,
-    "social_operating_system": number,
-    "execution_system": number,
-    "self_deception_architecture": number
-  }
-}`;
-
-export const ANALYSIS_JSON_SCHEMA_PART2 = `{
-  "evidence_chains": [{
-    "claim": string,
-    "chain": [{ "question_id": string, "signal": string }],
-    "inference": string,
-    "confidence_pct": number,
-    "evidence_count": number,
-    "counter_evidence": string[],
-    "counter_evidence_count": number
+  "blind_spots": [{
+    "pattern": string,
+    "cost": string
   }],
-  "mechanism_map": [{ "driver": string, "threat": string, "coping_strategy": string, "behavior": string }],
-  "root_causes": [{ "rank": number, "mechanism": string, "explains": string[], "coverage_pct": number, "confidence_pct": number, "evidence": string[] }],
-  "self_deception_detector": [{ "claim": string, "evidence_for": string[], "evidence_against": string[], "inference": string, "confidence_pct": number }],
-  "behavioral_predictions": [{ "situation": string, "prediction": string, "mechanism": string, "confidence_pct": number }],
-  "strategic_adaptations": string[],
-  "blind_spot_architecture": {
-    "summary": string,
-    "items": [{ "pattern": string, "evidence": string, "likely_cost": string, "confidence_pct": number, "evidence_count": number, "counter_evidence": string[] }]
-  },
-  "memory_seeds": [
-    { "memory_type": "theme"|"fear"|"goal"|"contradiction"|"behavioral_pattern"|"emotional_state"|"recurring_phrase"|"motivation"|"identity"|"trigger", "content": string, "evidence": string }
-  ]
+  "self_deception": [{
+    "belief": string,
+    "why_it_feels_true": string,
+    "what_may_be_happening": string
+  }],
+  "predictions": [{
+    "situation": string,
+    "prediction": string
+  }],
+  "action_plan": [string],
+  "memory_seeds": [{
+    "memory_type": "theme"|"fear"|"goal"|"contradiction"|"behavioral_pattern"|"emotional_state"|"recurring_phrase"|"motivation"|"identity"|"trigger",
+    "content": string,
+    "evidence": string
+  }]
 }`;
 
-const PLAIN_ENGLISH_VOICE = `⸻
-HOW TO WRITE (MOST IMPORTANT)
+const PLAIN_ENGLISH = `⸻
+VOICE (NON-NEGOTIABLE)
 ⸻
 
-Rewrite every sentence so a smart 15-year-old could understand it immediately.
+Grade 8 reading level. A smart 15-year-old must understand every sentence instantly.
 
-Remove all consultant language.
-Remove all psychology language.
+Write like a sharp mentor — not a psychologist, consultant, or personality test.
 
-Never use these phrases (or close variants) in ANY string value you output:
-- operating system
-- architecture
-- mechanism
-- incentive structure
-- conversion of stakes
-- autonomy protection
-- cognitive control
-- execution friction
-- strategic mastery
-- public competence threat
+Target reaction: "That's exactly what I do." NOT "That sounds sophisticated."
 
-Also avoid: leverage, paradigm, optimize, ecosystem, latent, psychometric, behavioral intelligence, trait labeling, Myers-Briggs tone, therapy-speak, motivational coach voice.
+NEVER in any output string:
+- Question IDs (Q1, Q12, Q41, etc.)
+- Percentages or confidence scores (no 92%, no "84% confidence")
+- operating system, architecture, mechanism, incentive structure, cognitive control, execution friction, strategic mastery, paradigm, leverage, optimize, psychometric, behavioral intelligence
 
-Replace jargon with plain English:
-- "operating system" → "how you actually work" / "your default pattern"
-- "architecture" → "how you handle X" / "your habit around X"
-- "mechanism" → "what's actually going on" / "the reason"
-- "execution friction" → "you stall when..." / "you keep putting it off because..."
-- "incentive structure" → "what you really care about" / "what you're protecting"
+Use normal English. Short sentences. Blunt and concrete.
 
-Every insight should feel like a blunt observation someone could say out loud to a friend.
+⸻
+REPORT DESIGN
+⸻
 
-Target reaction: "That's exactly what I do."
-NOT: "That sounds sophisticated."
+Maximum insight. Minimum noise. Apple-clear, not IBM-exhaustive.
 
-Short sentences. Concrete words. Say what they DO, not what they "are" in theory.
+Goal: user remembers (1) archetype, (2) biggest strength, (3) biggest weakness, (4) the lie they tell themselves, (5) what to do next.
 
-JSON field names stay as in the schema — but every summary, explanation, label, bullet, claim, inference, and prediction must follow plain-English rules above.`;
+Use assessment answers internally to triangulate — never cite question IDs in output.`;
 
 const SYSTEM_CORE = `You are Reflecho's analysis engine.
 
-Your job: read the assessment and write a dossier that nails how this person actually thinks, decides, avoids, and gets stuck — in words they instantly recognize.
-
-NOT a personality test. NOT a therapy intake. NOT corporate consulting.
+Read the full assessment and produce a personal dossier — a diagnosis, not a personality test.
 
 ⸻
-ANALYSIS RULES
+ARCHETYPE (ONE ONLY)
 ⸻
 
-Rank top 3 core_drivers, core_threats, core_constraints (0–100). Use plain labels: "Looking competent", "Being ignored", "Needing to keep options open" — not jargon.
+Pick ONE headline identity from: ${ARCHETYPE_NAMES.join(", ")}.
 
-Assign archetypes from this list only: Strategist, Builder, Sovereign, Operator, Scholar, Commander, Architect, Catalyst, Connector, Competitor. Write core_drive, weapon, blind_spot in plain English (what they want, what they're good at, where they screw themselves).
+Choose from the strongest recurring patterns across ALL sections — not one answer, not a score.
 
-Perception calibration: use Section 1 score + bias hint. Quadrants: elite, pattern_seer, misses_manipulation, paranoid_interpreter — but write the summary in normal language.
+No primary/secondary/shadow. No percentages. No dual archetypes.
 
-Every major claim needs Q-id evidence. Strong claims need 3+ independent question signals.
+Format name as "The Sovereign" etc.
 
-core_diagnosis: ONE sentence, last. Plain English. Should feel like: "You see the problem fast but wait to move until it feels safe to fail." Not a thesis.
+archetype.description: 2–3 plain sentences on how they think and decide.
+archetype.strength: one clear sentence.
+archetype.weakness: one clear sentence (biggest risk).
 
-${PLAIN_ENGLISH_VOICE}
+⸻
+SECTIONS TO OUTPUT
+⸻
 
-${OUTPUT_LIMITS}
+core_diagnosis: 2–4 sentences. Who they are and what actually holds them back. Plain English.
 
-Return ONLY valid JSON. No markdown.`;
+drivers: exactly 3 short motivation lines (what pulls them).
+threats: exactly 3 short fear/sensitivity lines.
+constraints: exactly 3 short bottleneck lines.
+
+mechanism_map: 3–4 rows. driver → threat → response → result. Easy to scan.
+
+blind_spots: 3–4 items. pattern + practical cost. No question refs.
+
+self_deception: max 3 items. belief / why_it_feels_true / what_may_be_happening.
+
+predictions: max 5. Concrete real-life situations + what they'll likely do.
+
+action_plan: exactly 5 specific things they can do. Replaces generic advice. No jargon.
+
+memory_seeds: max 6 for the advisor chat. Plain content, no Q-ids in evidence field.
+
+⸻
+DO NOT OUTPUT
+⸻
+
+Evidence chains, root causes, radar scores, dimension sections, reality processing scores, perception calibration, primary/secondary/shadow archetypes, strategic_adaptations (use action_plan instead), or any confidence/coverage percentages.
+
+${PLAIN_ENGLISH}
+
+Return ONLY valid JSON matching the schema. No markdown.`;
 
 export const ANALYSIS_SYSTEM_PROMPT = `${SYSTEM_CORE}
 
-JSON SCHEMA (return exactly this shape):
-${ANALYSIS_JSON_SCHEMA}
-
-Set reality_processing_score and perception_calibration.accuracy_pct from the REALITY PROCESSING block in the user message. Write core_diagnosis last — one plain-English sentence the reader would nod at immediately.`;
-
-export const ANALYSIS_SYSTEM_PROMPT_PART1 = `${SYSTEM_CORE}
-
-PHASE 1 — core structure only. Do NOT include evidence_chains, mechanism_map, root_causes, self_deception_detector, behavioral_predictions, strategic_adaptations, blind_spot_architecture, or memory_seeds.
-
 JSON SCHEMA:
-${ANALYSIS_JSON_SCHEMA_PART1}`;
-
-export const ANALYSIS_SYSTEM_PROMPT_PART2 = `${SYSTEM_CORE}
-
-PHASE 2 — extend the partial dossier from the user message. Stay consistent with hierarchy, archetypes, and core_diagnosis already assigned. All new text must follow plain-English rules — blunt, conversational, zero jargon.
-
-JSON SCHEMA (merge with partial):
-${ANALYSIS_JSON_SCHEMA_PART2}`;
+${ANALYSIS_JSON_SCHEMA}`;
 
 function formatAnswer(r: { answer_choices?: string[] | null }) {
   return r.answer_choices?.[0] ?? "(no answer)";
@@ -236,8 +150,7 @@ function formatAnswer(r: { answer_choices?: string[] | null }) {
 function formatResponses(input: AnalysisPromptInput) {
   const grouped: Record<string, string[]> = {};
   for (const r of input.responses) {
-    const dims = r.measured_dimensions?.join(", ") ?? "";
-    const line = `- ${r.question_id}${dims ? ` [${dims}]` : ""}\n  Q: ${r.question}\n  A: ${formatAnswer(r)}`;
+    const line = `- ${r.question_id}\n  Q: ${r.question}\n  A: ${formatAnswer(r)}`;
     (grouped[r.category] ??= []).push(line);
   }
 
@@ -251,23 +164,15 @@ function formatResponses(input: AnalysisPromptInput) {
 }
 
 function realityBlock(input: AnalysisPromptInput) {
-  const rpLines = input.realityProcessing.by_question
-    .map(
-      (q) =>
-        `${q.id}: ${q.correct ? "strong" : "miss"} → "${q.chosen || "—"}"`,
-    )
-    .join("\n");
-
-  return `REALITY PROCESSING (Section 1)
-Score: ${input.realityProcessing.correct}/${input.realityProcessing.total} (${input.realityProcessing.accuracy_pct}%)
-Bias hint: ${input.perceptionBias.bias_level} (${input.perceptionBias.cynical_wrong_pct}% cynical wrong picks)
-Quadrant hint: ${input.perceptionBias.suggested_quadrant_hint}
-${rpLines}`;
+  return `INTERNAL CONTEXT (do not quote scores or Q-ids in output)
+Section 1 accuracy: ${input.realityProcessing.accuracy_pct}%
+Bias hint: ${input.perceptionBias.bias_level}
+Pattern hint: ${input.perceptionBias.suggested_quadrant_hint}`;
 }
 
 function subjectBlock(input: AnalysisPromptInput) {
   return `SUBJECT: ${input.displayName} | Age: ${input.ageRange ?? "—"} | Role: ${input.occupation ?? "—"}
-${TOTAL_QUESTIONS} answers below. Triangulate across ALL sections.`;
+${TOTAL_QUESTIONS} answers below. Triangulate patterns across ALL sections before writing.`;
 }
 
 export function computePerceptionBias(score: RealityProcessingScore) {
@@ -299,36 +204,6 @@ export function buildAnalysisUserPrompt(input: AnalysisPromptInput) {
   return `${subjectBlock(input)}
 
 ${realityBlock(input)}
-
-ASSESSMENT RESPONSES
-
-${formatResponses(input)}`;
-}
-
-export function buildAnalysisUserPromptPart1(input: AnalysisPromptInput) {
-  return `${subjectBlock(input)}
-
-${realityBlock(input)}
-
-PHASE 1 ORDER: hierarchy → archetypes → perception_calibration → dimension summaries → radar_scores → core_diagnosis (one sentence, last).
-
-ASSESSMENT RESPONSES
-
-${formatResponses(input)}`;
-}
-
-export function buildAnalysisUserPromptPart2(
-  input: AnalysisPromptInput,
-  partial: Record<string, unknown> | CognitiveDossier,
-) {
-  return `${subjectBlock(input)}
-
-${realityBlock(input)}
-
-PARTIAL DOSSIER (already locked — stay consistent)
-${JSON.stringify(partial)}
-
-PHASE 2 ORDER: evidence_chains → root_causes → mechanism_map → self_deception_detector → behavioral_predictions → blind_spot_architecture → memory_seeds.
 
 ASSESSMENT RESPONSES
 

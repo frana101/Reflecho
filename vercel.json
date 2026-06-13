@@ -5,12 +5,6 @@
   "functions": {
     "src/app/api/reconstruction/analyze/route.ts": {
       "maxDuration": 300
-    },
-    "src/app/api/reconstruction/analyze/part1/route.ts": {
-      "maxDuration": 300
-    },
-    "src/app/api/reconstruction/analyze/part2/route.ts": {
-      "maxDuration": 300
     }
   }
 }

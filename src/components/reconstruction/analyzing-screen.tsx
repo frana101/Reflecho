@@ -7,27 +7,13 @@ import { Button } from "@/components/ui/button";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 
 const STAGES = [
-  "Scoring reality processing...",
-  "Mapping driver hierarchy...",
-  "Building evidence chains...",
-  "Compressing root causes...",
-  "Calibrating perception bias...",
-  "Assigning operating patterns...",
-  "Generating core diagnosis...",
-  "Writing behavioral predictions...",
-  "Compiling operating report...",
+  "Reading your answers...",
+  "Finding your patterns...",
+  "Choosing your archetype...",
+  "Writing your diagnosis...",
+  "Mapping what holds you back...",
+  "Building your action plan...",
 ];
-
-function isTimeoutError(message: string, status: number) {
-  const m = message.toLowerCase();
-  return (
-    status === 504 ||
-    m.includes("timeout") ||
-    m.includes("timed out") ||
-    m.includes("function_invocation_timeout") ||
-    m.includes("task timed out")
-  );
-}
 
 function friendlyError(message: string) {
   const m = message.toLowerCase();
@@ -37,11 +23,11 @@ function friendlyError(message: string) {
   if (m.includes("temperature") && m.includes("unsupported")) {
     return "Server sent an invalid temperature setting for gpt-5.5. Redeploy the latest code — this was fixed.";
   }
-  if (isTimeoutError(message, 0)) {
-    return "Analysis timed out on the server. Retrying in two shorter phases…";
+  if (m.includes("timeout") || m.includes("timed out") || m.includes("504")) {
+    return "Analysis timed out on the server. Try again in a moment.";
   }
   if (m.includes("json") || m.includes("unexpected token")) {
-    return "The model returned invalid JSON. Try again — if it keeps failing, the prompt may need a shorter run.";
+    return "The model returned invalid JSON. Try again.";
   }
   return message;
 }
@@ -54,33 +40,16 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
   const [retrying, setRetrying] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
-  const runSplitAnalysis = useCallback(async () => {
+  const runAnalysis = useCallback(async () => {
     setError(null);
     setRecoverable(false);
     setRetrying(true);
     try {
-      const p1 = await fetch("/api/reconstruction/analyze/part1", { method: "POST" });
-      const p1Body = await p1.json().catch(() => ({}));
-      if (!p1.ok) {
-        setError(friendlyError(p1Body.error ?? "Phase 1 synthesis failed."));
-        setRecoverable(Boolean(p1Body.recover));
-        return;
-      }
-      if (p1Body.recovered) {
-        router.push("/dossier");
-        router.refresh();
-        return;
-      }
-
-      const p2 = await fetch("/api/reconstruction/analyze/part2", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ partial: p1Body.partial, raw: p1Body.raw }),
-      });
-      const p2Body = await p2.json().catch(() => ({}));
-      if (!p2.ok) {
-        setError(friendlyError(p2Body.error ?? "Phase 2 synthesis failed."));
-        setRecoverable(Boolean(p2Body.recover));
+      const res = await fetch("/api/reconstruction/analyze", { method: "POST" });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(friendlyError(body.error ?? "Analysis failed."));
+        setRecoverable(Boolean(body.recover));
         return;
       }
       router.push("/dossier");
@@ -92,38 +61,6 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
       setRetrying(false);
     }
   }, [router]);
-
-  const runAnalysis = useCallback(async () => {
-    setError(null);
-    setRecoverable(false);
-    setRetrying(true);
-    try {
-      const res = await fetch("/api/reconstruction/analyze", {
-        method: "POST",
-      });
-      const body = await res.json().catch(() => ({}));
-      if (res.ok) {
-        router.push("/dossier");
-        router.refresh();
-        return;
-      }
-      if (isTimeoutError(body.error ?? "", res.status)) {
-        await runSplitAnalysis();
-        return;
-      }
-      setError(friendlyError(body.error ?? "Analysis failed."));
-      setRecoverable(Boolean(body.recover));
-    } catch (e) {
-      const m = e instanceof Error ? e.message : "Unknown error";
-      if (isTimeoutError(m, 0)) {
-        await runSplitAnalysis();
-        return;
-      }
-      setError(friendlyError(m));
-    } finally {
-      setRetrying(false);
-    }
-  }, [router, runSplitAnalysis]);
 
   useEffect(() => {
     const cycle = setInterval(() => {
@@ -149,25 +86,20 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
       </div>
 
       <div className="flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-8">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-bone/30 to-transparent animate-pulse-slow" />
-          <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-transparent via-bone/30 to-transparent animate-pulse-slow" />
-        </div>
-
         <div className="relative z-10 w-full max-w-2xl text-center">
           <div className="mb-8 sm:mb-12 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone/40">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-bone animate-pulse" />
-            <span>{error ? "Synthesis halted" : retrying ? "Synthesis in progress" : "Preparing"}</span>
+            <span>{error ? "Stopped" : retrying ? "Building your report" : "Preparing"}</span>
           </div>
 
           <h1 className="text-2xl sm:text-display-md font-light tracking-tight text-balance">
-            {error ? `Hold on, ${displayName}.` : `Reconstructing ${displayName}.`}
+            {error ? `Hold on, ${displayName}.` : `Building ${displayName}'s report.`}
           </h1>
 
           {!error && (
             <p className="mt-6 sm:mt-8 text-bone-muted text-sm max-w-md mx-auto leading-relaxed px-2">
-              Cross-referencing your answers for incentive patterns, contradictions,
-              and what actually governs how you operate. Usually 30–90 seconds.
+              Turning your answers into a clear read on how you think and what to
+              do next. Usually 30–90 seconds.
             </p>
           )}
 
@@ -205,7 +137,7 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
                     disabled={retrying}
                     onClick={() => setAttempt((a) => a + 1)}
                   >
-                    {retrying ? "Retrying…" : "Retry synthesis"}
+                    {retrying ? "Retrying…" : "Retry"}
                   </Button>
                 )}
                 <Button

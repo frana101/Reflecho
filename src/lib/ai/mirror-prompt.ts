@@ -160,35 +160,22 @@ export function buildMirrorSystemPrompt({
 
   const dossierBlock = dossier
     ? `
-OPERATING MODEL (V2 — mechanism-based, not personality labels)
+PERSONAL MODEL
 - Core diagnosis: ${dossier.core_diagnosis ?? "(none)"}
-- Summary: ${dossier.summary ?? "(none)"}
-- Primary archetype: ${dossier.archetypes?.primary?.name ?? "(none)"} ${dossier.archetypes?.primary?.score_pct ?? ""}% — drive: ${dossier.archetypes?.primary?.core_drive ?? ""}, blind spot: ${dossier.archetypes?.primary?.blind_spot ?? ""}
-- Secondary: ${dossier.archetypes?.secondary?.name ?? "(none)"} ${dossier.archetypes?.secondary?.score_pct ?? ""}%
-- Shadow: ${dossier.archetypes?.shadow?.name ?? "(none)"} ${dossier.archetypes?.shadow?.score_pct ?? ""}%
-- Top drivers: ${dossier.hierarchy?.core_drivers?.map((d) => `${d.label} ${d.score_pct}%`).join(", ") ?? "(none)"}
-- Top threats: ${dossier.hierarchy?.core_threats?.map((t) => `${t.label} ${t.score_pct}%`).join(", ") ?? "(none)"}
-- Top constraints: ${dossier.hierarchy?.core_constraints?.map((c) => `${c.label} ${c.score_pct}%`).join(", ") ?? "(none)"}
-- Perception: ${dossier.perception_calibration?.quadrant ?? "?"} — accuracy ${dossier.perception_calibration?.accuracy_pct ?? "?"}%, bias ${dossier.perception_calibration?.bias_level ?? "?"}
-- Reality processing: ${dossier.reality_processing_score?.correct ?? "?"}/${dossier.reality_processing_score?.total ?? "?"} — ${dossier.reality_processing_score?.summary ?? ""}
-- Root causes: ${dossier.root_causes?.map((r) => `${r.mechanism} (${r.coverage_pct}%)`).join(" | ") ?? "(none)"}
-- Mechanism map: ${dossier.mechanism_map?.map((m) => `${m.driver}→${m.behavior}`).join(" | ") ?? "(none)"}
-- Self-deception flags: ${dossier.self_deception_detector?.map((s) => s.inference).join(" | ") ?? "(none)"}
-- Decision architecture: ${dossier.decision_architecture?.summary ?? ""}
-- Identity architecture: ${dossier.identity_architecture?.summary ?? ""}
-- Threat architecture: ${dossier.threat_architecture?.summary ?? ""}
-- Social operating system: ${dossier.social_operating_system?.summary ?? ""}
-- Execution system: ${dossier.execution_system?.summary ?? ""}
-- Self-deception architecture: ${dossier.self_deception_architecture?.summary ?? ""}
-- Behavioral predictions: ${
-        dossier.behavioral_predictions
-          ?.map((p) => `[${p.situation}] → ${p.prediction} (${p.mechanism}, ${p.confidence_pct}%)`)
-          .join(" | ") ?? "(none)"
-      }
-- Strategic adaptations: ${dossier.strategic_adaptations?.join(" | ") ?? "(none)"}
+- Archetype: ${dossier.archetype?.name ?? "(none)"} — ${dossier.archetype?.description ?? ""}
+- Strength: ${dossier.archetype?.strength ?? ""}
+- Weakness: ${dossier.archetype?.weakness ?? ""}
+- Drivers: ${dossier.drivers?.join(" | ") ?? "(none)"}
+- Threats: ${dossier.threats?.join(" | ") ?? "(none)"}
+- Constraints: ${dossier.constraints?.join(" | ") ?? "(none)"}
+- Mechanism map: ${dossier.mechanism_map?.map((m) => `${m.driver}→${m.result}`).join(" | ") ?? "(none)"}
+- Blind spots: ${dossier.blind_spots?.map((b) => b.pattern).join(" | ") ?? "(none)"}
+- Self-deception: ${dossier.self_deception?.map((s) => s.belief).join(" | ") ?? "(none)"}
+- Predictions: ${dossier.predictions?.map((p) => `[${p.situation}] → ${p.prediction}`).join(" | ") ?? "(none)"}
+- Action plan: ${dossier.action_plan?.join(" | ") ?? "(none)"}
 `
     : `
-OPERATING MODEL: not yet built. Ask precise questions. Infer carefully. Be practical.`;
+PERSONAL MODEL: not yet built. Ask precise questions. Infer carefully. Be practical.`;
 
   const memoryBlock = memory.length
     ? `

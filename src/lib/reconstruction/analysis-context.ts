@@ -111,27 +111,13 @@ export async function saveDossier(
   userId: string,
   dossier: import("@/lib/types/dossier").CognitiveDossier,
   raw: string,
-  realityProcessing: ReturnType<typeof scoreRealityProcessing>,
-  perceptionBias: ReturnType<typeof computePerceptionBias>,
 ) {
   const supabase = await createClient();
   const { dossierToDbRow } = await import("@/lib/types/dossier");
 
-  dossier.reality_processing_score = {
-    correct: realityProcessing.correct,
-    total: realityProcessing.total,
-    accuracy_pct: realityProcessing.accuracy_pct,
-    summary: dossier.reality_processing_score?.summary ?? "",
-  };
-  dossier.perception_calibration = {
-    ...dossier.perception_calibration,
-    accuracy_pct: realityProcessing.accuracy_pct,
-    bias_level: perceptionBias.bias_level,
-  };
-
   const { error: insertErr } = await supabase.from("cognitive_dossiers").insert({
     user_id: userId,
-    version: 1,
+    version: 3,
     ...dossierToDbRow(dossier),
     raw_model_output: raw,
   });
