@@ -69,7 +69,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
   return (
     <div className="w-full max-w-2xl">
-      <div className="flex items-center justify-between mb-12 text-[10px] tracking-[0.32em] uppercase text-bone/40">
+      <div className="flex items-center justify-between mb-12 text-[10px] tracking-[0.32em] uppercase text-bone-muted">
         <span>Phase 00 - Intake</span>
         <span>Step {step + 1} / 4</span>
       </div>
@@ -85,11 +85,11 @@ export function IntakeForm({ initial }: IntakeFormProps) {
         >
           {step === 0 && (
             <div>
-              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
-                What should the mirror call you?
+              <h2 className="text-2xl sm:text-display-lg font-medium tracking-tight text-balance">
+                What should we call you?
               </h2>
-              <p className="mt-4 text-bone-muted text-sm leading-relaxed max-w-md">
-                Your name is the first signal. Use what feels most like you.
+              <p className="mt-4 text-sm leading-snug max-w-md">
+                Use the name you want on your report.
               </p>
               <div className="mt-12 space-y-3">
                 <Label htmlFor="name">Name</Label>
@@ -100,7 +100,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
                   onChange={(e) => setName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && canAdvance && next()}
                   placeholder="e.g. Alex"
-                  className="text-2xl h-16 font-light tracking-tight"
+                  className="text-2xl h-16 font-medium tracking-tight"
                 />
               </div>
             </div>
@@ -108,11 +108,11 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
           {step === 1 && (
             <div>
-              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
-                Calibration: age range.
+              <h2 className="text-2xl sm:text-display-lg font-medium tracking-tight text-balance">
+                Age range
               </h2>
-              <p className="mt-4 text-bone-muted text-sm leading-relaxed max-w-md">
-                Used only to calibrate cognitive baselines, not to label you.
+              <p className="mt-4 text-sm leading-snug max-w-md">
+                Helps calibrate your report. Not used to label you.
               </p>
               <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {AGE_RANGES.map((r) => (
@@ -125,8 +125,8 @@ export function IntakeForm({ initial }: IntakeFormProps) {
                     }}
                     className={`min-h-[52px] border text-[13px] tracking-tight transition-all ${
                       age === r
-                        ? "border-bone bg-bone/10 text-bone"
-                        : "border-line text-bone-muted hover:border-bone/40 hover:text-bone"
+                        ? "border-bone bg-bone text-black"
+                        : "border-line text-bone hover:border-line-strong"
                     }`}
                   >
                     {r}
@@ -138,11 +138,11 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
           {step === 2 && (
             <div>
-              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
-                What is your work?
+              <h2 className="text-2xl sm:text-display-lg font-medium tracking-tight text-balance">
+                What do you do?
               </h2>
-              <p className="mt-4 text-bone-muted text-sm leading-relaxed max-w-md">
-                One phrase. Not a title - a description of what you actually do.
+              <p className="mt-4 text-sm leading-snug max-w-md">
+                One phrase. What you actually do, not your job title.
               </p>
               <div className="mt-12 space-y-3">
                 <Label htmlFor="occupation">Occupation</Label>
@@ -153,7 +153,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
                   onChange={(e) => setOccupation(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && canAdvance && next()}
                   placeholder="e.g. Building a software company"
-                  className="text-2xl h-16 font-light tracking-tight"
+                  className="text-2xl h-16 font-medium tracking-tight"
                 />
               </div>
             </div>
@@ -161,26 +161,25 @@ export function IntakeForm({ initial }: IntakeFormProps) {
 
           {step === 3 && (
             <div>
-              <h2 className="text-2xl sm:text-display-lg font-light tracking-tight text-balance">
-                You are about to be seen.
+              <h2 className="text-2xl sm:text-display-lg font-medium tracking-tight text-balance">
+                Ready for your assessment.
               </h2>
-              <p className="mt-6 text-bone-muted leading-relaxed max-w-lg">
-                The assessment that follows reconstructs how you operate — not
-                who you claim to be. Forced tradeoffs, social dilemmas, and
-                calibration scales. No personality labels.
+              <p className="mt-6 leading-snug max-w-lg">
+                20 questions. Under 3 minutes. No personality labels — just a
+                clear read on how you think and what to do next.
               </p>
               <ul className="mt-10 space-y-3 max-w-md">
                 {[
-                  `${TOTAL_QUESTIONS} assessment items across 4 sections`,
-                  "Roughly 18–22 minutes",
-                  "Autosaved continuously",
-                  "Output: your operating profile + mirror advisor",
+                  `${TOTAL_QUESTIONS} questions across 4 sections`,
+                  "Under 3 minutes",
+                  "Autosaved as you go",
+                  "Your report + personal advisor",
                 ].map((b) => (
                   <li
                     key={b}
-                    className="text-sm font-light text-bone-muted flex items-center gap-3"
+                    className="text-sm flex items-center gap-3"
                   >
-                    <span className="h-px w-4 bg-bone/40" />
+                    <span className="h-px w-4 bg-line" />
                     {b}
                   </li>
                 ))}
@@ -221,7 +220,7 @@ export function IntakeForm({ initial }: IntakeFormProps) {
             disabled={submitting}
             className="w-full sm:min-w-[220px] min-h-[48px]"
           >
-            {submitting ? "Initializing..." : "Begin Reconstruction"}
+            {submitting ? "Starting..." : "Start assessment"}
           </Button>
         )}
       </div>

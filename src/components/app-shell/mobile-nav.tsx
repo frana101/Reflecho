@@ -27,7 +27,7 @@ export function MobileNav({ displayName }: { displayName: string }) {
 
   return (
     <>
-      <header className="md:hidden fixed inset-x-0 top-0 z-40 h-14 border-b border-line bg-ink-0/90 backdrop-blur-xl pb-safe">
+      <header className="md:hidden fixed inset-x-0 top-0 z-40 h-14 border-b border-line bg-black/95 backdrop-blur-xl pb-safe">
         <div className="flex h-14 items-center justify-between px-4">
           <Link href="/app" className="flex items-center gap-2 min-w-0">
             <span className="inline-block h-2 w-2 bg-bone shrink-0" />

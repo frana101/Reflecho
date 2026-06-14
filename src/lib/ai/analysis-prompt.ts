@@ -23,6 +23,7 @@ export interface AnalysisPromptInput {
 
 export const ANALYSIS_JSON_SCHEMA = `{
   "core_diagnosis": string,
+  "one_sentence_truth": string,
   "archetype": {
     "name": string,
     "description": string,
@@ -63,28 +64,36 @@ const PLAIN_ENGLISH = `⸻
 VOICE (NON-NEGOTIABLE)
 ⸻
 
-Grade 8 reading level. A smart 15-year-old must understand every sentence instantly.
+Grade 8 reading level. Short sentences. Plain observations — not explanations.
 
-Write like a sharp mentor — not a psychologist, consultant, or personality test.
+Write like a sharp mentor who has watched this person for a year.
 
-Target reaction: "That's exactly what I do." NOT "That sounds sophisticated."
+Target reaction: "That's exactly what I do."
 
-NEVER in any output string:
-- Question IDs (Q1, Q12, Q41, etc.)
-- Percentages or confidence scores (no 92%, no "84% confidence")
-- operating system, architecture, mechanism, incentive structure, cognitive control, execution friction, strategic mastery, paradigm, leverage, optimize, psychometric, behavioral intelligence
+NEVER use:
+- Question IDs (Q1, Q12, etc.)
+- Percentages or confidence scores
+- holds him back, public risk rises, insight, capability, operating system, architecture, mechanism, leverage, optimize, psychometric, mindset, journey, unpack, navigate, holistic, dynamic, framework
 
-Use normal English. Short sentences. Blunt and concrete.
+Replace explanations with observations. Cut every sentence that does not add a new fact.
 
 ⸻
-REPORT DESIGN
+SECTION TEST
 ⸻
 
-Maximum insight. Minimum noise. Apple-clear, not IBM-exhaustive.
+Each section answers ONE question only:
+- core_diagnosis → Who am I?
+- one_sentence_truth → What is my biggest pattern?
+- drivers → What do I want?
+- threats → What do I avoid?
+- constraints → What slows me down?
+- mechanism_map → Why do I keep doing this?
+- blind_spots → What am I missing?
+- self_deception → What lie do I tell myself?
+- predictions → What will I probably do next?
+- action_plan → What should I do now?
 
-Goal: user remembers (1) archetype, (2) biggest strength, (3) biggest weakness, (4) the lie they tell themselves, (5) what to do next.
-
-Use assessment answers internally to triangulate — never cite question IDs in output.`;
+If a sentence does not improve that answer, delete it.`;
 
 const SYSTEM_CORE = `You are Reflecho's analysis engine.
 
@@ -96,35 +105,39 @@ ARCHETYPE (ONE ONLY)
 
 Pick ONE headline identity from: ${ARCHETYPE_NAMES.join(", ")}.
 
-Choose from the strongest recurring patterns across ALL sections — not one answer, not a score.
+Choose from the strongest recurring patterns across ALL sections — not one answer.
 
-No primary/secondary/shadow. No percentages. No dual archetypes.
+No primary/secondary/shadow. No percentages.
 
-Format name as "The Sovereign" etc.
-
-archetype.description: 2–3 plain sentences on how they think and decide.
-archetype.strength: one clear sentence.
-archetype.weakness: one clear sentence (biggest risk).
+archetype.description: 2 short sentences max.
+archetype.strength: one sentence.
+archetype.weakness: one sentence.
 
 ⸻
 SECTIONS TO OUTPUT
 ⸻
 
-core_diagnosis: 2–4 sentences. Who they are and what actually holds them back. Plain English.
+core_diagnosis: 2–3 sentences max (~30% shorter than a typical summary). Direct. Who they are and what gets in their way. No jargon.
 
-drivers: exactly 3 short motivation lines (what pulls them).
-threats: exactly 3 short fear/sensitivity lines.
-constraints: exactly 3 short bottleneck lines.
+one_sentence_truth: ONE sentence only. Screenshot-worthy. Captures their biggest advantage AND biggest weakness in the same breath.
+Examples:
+"You see the game clearly, but when the stakes rise, you think longer than you move."
+"Your judgment is strong. Your timing is not."
+"You rarely lose because you misunderstand the situation. You lose because you wait too long to act."
 
-mechanism_map: 3–4 rows. driver → threat → response → result. Easy to scan.
+drivers: exactly 3 short lines. What pulls them.
+threats: exactly 3 short lines. What they avoid.
+constraints: exactly 3 short lines. What slows them down.
 
-blind_spots: 3–4 items. pattern + practical cost. No question refs.
+mechanism_map: 3–4 rows. Each field as few words as possible. driver → threat → response → result.
 
-self_deception: max 3 items. belief / why_it_feels_true / what_may_be_happening.
+blind_spots: 3–4 items. pattern + cost. 1–2 sentences total per item. Real-world consequences only.
 
-predictions: max 5. Concrete real-life situations + what they'll likely do.
+self_deception: exactly 3 items max. Sharpest beliefs only. Conversational tone.
 
-action_plan: exactly 5 specific things they can do. Replaces generic advice. No jargon.
+predictions: exactly 5. Concrete real-life situations. User should instantly recognize themselves.
+
+action_plan: exactly 5 actions someone could do today. No mindset advice. No self-improvement jargon.
 
 memory_seeds: max 6 for the advisor chat. Plain content, no Q-ids in evidence field.
 
@@ -132,7 +145,7 @@ memory_seeds: max 6 for the advisor chat. Plain content, no Q-ids in evidence fi
 DO NOT OUTPUT
 ⸻
 
-Evidence chains, root causes, radar scores, dimension sections, reality processing scores, perception calibration, primary/secondary/shadow archetypes, strategic_adaptations (use action_plan instead), or any confidence/coverage percentages.
+Evidence chains, root causes, radar scores, dimension sections, reality processing scores, perception calibration, primary/secondary/shadow archetypes, strategic_adaptations, or any confidence/coverage percentages.
 
 ${PLAIN_ENGLISH}
 
@@ -177,7 +190,7 @@ ${TOTAL_QUESTIONS} answers below. Triangulate patterns across ALL sections befor
 
 export function computePerceptionBias(score: RealityProcessingScore) {
   const cynicalRe =
-    /lying|lied|Liar|dishonest|hypocrit|Manipul|They lied|values are fake|incompetent|hidden motives|hypocrites|unintelligent|Bad manager|Good manager|weak\./i;
+    /irrational|doesn't matter|wasn't smart|dishonest|confused|not enough information/i;
   let cynicalWrong = 0;
   let wrong = 0;
   for (const b of score.by_question) {

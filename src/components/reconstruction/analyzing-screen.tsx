@@ -9,9 +9,8 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 const STAGES = [
   "Reading your answers...",
   "Finding your patterns...",
+  "Writing your one sentence truth...",
   "Choosing your archetype...",
-  "Writing your diagnosis...",
-  "Mapping what holds you back...",
   "Building your action plan...",
 ];
 
@@ -87,19 +86,19 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
 
       <div className="flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-8">
         <div className="relative z-10 w-full max-w-2xl text-center">
-          <div className="mb-8 sm:mb-12 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone/40">
+          <div className="mb-8 sm:mb-12 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone-muted">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-bone animate-pulse" />
             <span>{error ? "Stopped" : retrying ? "Building your report" : "Preparing"}</span>
           </div>
 
-          <h1 className="text-2xl sm:text-display-md font-light tracking-tight text-balance">
+          <h1 className="text-2xl sm:text-display-md font-medium tracking-tight text-balance">
             {error ? `Hold on, ${displayName}.` : `Building ${displayName}'s report.`}
           </h1>
 
           {!error && (
-            <p className="mt-6 sm:mt-8 text-bone-muted text-sm max-w-md mx-auto leading-relaxed px-2">
+            <p className="mt-6 sm:mt-8 text-sm max-w-md mx-auto leading-snug px-2">
               Turning your answers into a clear read on how you think and what to
-              do next. Usually 30–90 seconds.
+              do next. Usually under a minute.
             </p>
           )}
 
@@ -157,7 +156,7 @@ export function AnalyzingScreen({ displayName }: { displayName: string }) {
           )}
 
           {!error && (
-            <div className="mt-16 sm:mt-20 text-[10px] tracking-[0.24em] uppercase text-bone/20">
+            <div className="mt-16 sm:mt-20 text-[10px] tracking-[0.24em] uppercase text-bone-muted">
               Keep this tab open
             </div>
           )}

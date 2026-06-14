@@ -15,11 +15,11 @@ const buttonVariants = cva(
         outline:
           "border border-line-strong text-bone hover:bg-bone/[0.04] hover:border-bone/30",
         ghost:
-          "text-bone-muted hover:text-bone hover:bg-bone/[0.04]",
+          "text-bone-muted hover:text-bone hover:bg-white/[0.06]",
         link:
           "text-bone underline-offset-4 hover:underline",
         subtle:
-          "bg-ink-100 text-bone hover:bg-ink-200 border border-line",
+          "bg-black text-bone hover:bg-ink-100 border border-line",
       },
       size: {
         sm: "h-9 px-4 text-[12px] tracking-widest uppercase",

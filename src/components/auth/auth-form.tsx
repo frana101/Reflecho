@@ -132,20 +132,20 @@ export function AuthForm({ mode }: { mode: Mode }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="border border-line bg-ink-100/40 p-6 sm:p-10"
+      className="border border-line bg-black p-6 sm:p-10"
     >
-      <h1 className="text-2xl sm:text-display-md font-light tracking-tight">
+      <h1 className="text-2xl sm:text-display-md font-medium tracking-tight">
         {isSignUp ? "Create your account" : "Sign in"}
       </h1>
-      <p className="mt-3 text-bone-muted text-sm leading-relaxed font-light">
+      <p className="mt-3 text-sm leading-snug">
         {isSignUp
           ? "Enter your email and password to get started."
           : "Welcome back."}
       </p>
 
       {activeEmail && (
-        <div className="mt-6 border border-line bg-ink-200/40 px-4 py-4 text-left">
-          <p className="text-[10px] tracking-[0.24em] uppercase text-bone/40">
+        <div className="mt-6 border border-line px-4 py-4 text-left">
+          <p className="text-[10px] tracking-[0.24em] uppercase text-bone-muted">
             Already signed in
           </p>
           <p className="mt-2 text-sm text-bone break-all">{activeEmail}</p>
@@ -182,7 +182,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
       <div className="my-8 flex items-center gap-4">
         <div className="h-px flex-1 bg-line" />
-        <span className="text-[10px] tracking-[0.32em] uppercase text-bone/30">
+        <span className="text-[10px] tracking-[0.32em] uppercase text-bone-muted">
           or
         </span>
         <div className="h-px flex-1 bg-line" />

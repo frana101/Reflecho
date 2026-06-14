@@ -194,23 +194,23 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
 
   return (
     <div className="relative w-full min-h-[calc(100dvh-4rem)] flex flex-col">
-      <div className="sticky top-0 z-10 border-b border-line bg-ink-0/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-line bg-black/95 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone/40 min-w-0">
-            <span className="truncate">Subject / {displayName}</span>
-            <span className="h-px w-6 bg-bone/20 shrink-0 hidden sm:block" />
+          <div className="flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone-muted min-w-0">
+            <span className="truncate">{displayName}</span>
+            <span className="h-px w-6 bg-line shrink-0 hidden sm:block" />
             <span className="truncate hidden sm:inline">{question.category}</span>
           </div>
           <div className="flex items-center justify-between sm:justify-end gap-4">
             <button
               type="button"
               onClick={startOver}
-              className="text-[10px] tracking-[0.28em] uppercase text-bone/40 hover:text-bone transition-colors min-h-[44px] px-2"
+              className="text-[10px] tracking-[0.28em] uppercase text-bone-muted hover:text-bone transition-colors min-h-[44px] px-2"
             >
               Start over
             </button>
             <span className="h-3 w-px bg-bone/20 hidden sm:block" />
-            <span className="text-[10px] tracking-[0.28em] uppercase text-bone/40 tabular-nums">
+            <span className="text-[10px] tracking-[0.28em] uppercase text-bone-muted tabular-nums">
               {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
           </div>
@@ -243,10 +243,10 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="w-full max-w-3xl"
           >
-            <div className="text-[10px] tracking-[0.32em] uppercase text-bone/30 mb-6">
-              {question.id} - {question.category}
+            <div className="text-[10px] tracking-[0.32em] uppercase text-bone-muted mb-6">
+              {question.category}
             </div>
-            <h1 className="text-lg md:text-xl font-light tracking-tight text-balance leading-relaxed whitespace-pre-line">
+            <h1 className="text-lg md:text-xl font-medium tracking-tight text-balance leading-snug whitespace-pre-line">
               {question.question}
             </h1>
 
@@ -270,7 +270,7 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
                 Back
               </Button>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-                <span className="text-center sm:text-left text-[10px] tracking-[0.28em] uppercase text-bone/30">
+                <span className="text-center sm:text-left text-[10px] tracking-[0.28em] uppercase text-bone-muted">
                   {savingId === question.id ? "Saving..." : "Autosaved"}
                 </span>
                 <Button
@@ -288,7 +288,7 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
               </div>
             </div>
 
-            <div className="mt-10 sm:mt-16 hidden md:block text-[10px] tracking-[0.32em] uppercase text-bone/20">
+            <div className="mt-10 sm:mt-16 hidden md:block text-[10px] tracking-[0.32em] uppercase text-bone-muted">
               cmd + enter to continue
             </div>
           </motion.div>
@@ -327,17 +327,17 @@ function QuestionInput({
             type="button"
             onClick={() => onChange({ choices: [c] })}
             className={cn(
-              "text-left border px-4 sm:px-5 py-4 transition-all text-sm font-light leading-relaxed min-h-[52px]",
+              "text-left border px-4 sm:px-5 py-4 transition-all text-sm leading-snug min-h-[52px]",
               isOn
-                ? "border-bone bg-bone/10 text-bone"
-                : "border-line text-bone-muted hover:border-bone/40 hover:text-bone",
+                ? "border-bone bg-bone text-black"
+                : "border-line text-bone hover:border-line-strong",
             )}
           >
             <span className="flex items-center gap-4">
               <span
                 className={cn(
                   "inline-block h-2 w-2 rounded-full transition-colors shrink-0",
-                  isOn ? "bg-bone" : "bg-bone/20",
+                  isOn ? "bg-black" : "bg-line",
                 )}
               />
               {c}

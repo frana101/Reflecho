@@ -53,7 +53,6 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-ink-0 text-bone selection:bg-bone selection:text-ink-0">
         <Grain />
-        <div className="pointer-events-none fixed inset-0 z-[1] vignette" />
         <div className="relative z-[2]">{children}</div>
       </body>
     </html>

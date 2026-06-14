@@ -23,7 +23,7 @@ export function DossierView({
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-8 py-10 sm:py-16 md:py-20">
       <header className="border-b border-line pb-10 sm:pb-12">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-bone/40">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-bone-muted">
           <span>Your report</span>
           <span className="tabular-nums">
             v{version} · {new Date(generatedAt).toLocaleDateString()}
@@ -32,7 +32,7 @@ export function DossierView({
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-8 text-3xl sm:text-4xl font-light tracking-tight"
+          className="mt-8 text-3xl sm:text-4xl font-medium tracking-tight"
         >
           {displayName}
         </motion.h1>
@@ -44,32 +44,41 @@ export function DossierView({
       {dossier.core_diagnosis && (
         <section className="mt-12 sm:mt-16">
           <SectionTitle>Core diagnosis</SectionTitle>
-          <p className="mt-4 text-lg sm:text-xl leading-relaxed font-light text-bone-muted">
+          <p className="mt-4 text-lg sm:text-xl leading-snug text-bone">
             {dossier.core_diagnosis}
           </p>
         </section>
       )}
 
+      {dossier.one_sentence_truth && (
+        <section className="mt-12 sm:mt-16 border-y border-line py-8 sm:py-10">
+          <SectionTitle>The one sentence truth</SectionTitle>
+          <p className="mt-4 text-xl sm:text-2xl leading-snug font-medium tracking-tight text-balance">
+            &ldquo;{dossier.one_sentence_truth}&rdquo;
+          </p>
+        </section>
+      )}
+
       {archetype?.name && (
-        <section className="mt-12 sm:mt-16 border border-line p-6 sm:p-8 bg-ink-50/30">
+        <section className="mt-12 sm:mt-16 border border-line p-6 sm:p-8">
           <SectionTitle>Archetype</SectionTitle>
-          <h2 className="mt-4 text-2xl sm:text-3xl font-light tracking-tight">
+          <h2 className="mt-4 text-2xl sm:text-3xl font-medium tracking-tight">
             {archetype.name}
           </h2>
           {archetype.description && (
-            <p className="mt-4 text-base leading-relaxed font-light text-bone-muted">
+            <p className="mt-4 text-base leading-snug text-bone">
               {archetype.description}
             </p>
           )}
           {archetype.strength && (
-            <p className="mt-4 text-base font-light">
-              <span className="text-bone/50">Strength — </span>
+            <p className="mt-4 text-base">
+              <span className="text-bone-muted">Strength — </span>
               {archetype.strength}
             </p>
           )}
           {archetype.weakness && (
-            <p className="mt-2 text-base font-light text-bone-muted">
-              <span className="text-bone/50">Weakness — </span>
+            <p className="mt-2 text-base">
+              <span className="text-bone-muted">Weakness — </span>
               {archetype.weakness}
             </p>
           )}
@@ -105,7 +114,7 @@ export function DossierView({
           <ul className="mt-6 space-y-5">
             {dossier.blind_spots.map((b, i) => (
               <li key={i} className="border-l-2 border-line pl-4">
-                <p className="text-base font-light">{b.pattern}</p>
+                <p className="text-base">{b.pattern}</p>
                 {b.cost && (
                   <p className="mt-1 text-sm text-bone-muted">{b.cost}</p>
                 )}
@@ -121,15 +130,15 @@ export function DossierView({
           <div className="mt-6 space-y-6">
             {dossier.self_deception.map((item, i) => (
               <div key={i} className="border border-line p-5 sm:p-6">
-                <p className="text-base font-light italic">
+                <p className="text-base italic">
                   &ldquo;{item.belief}&rdquo;
                 </p>
-                <p className="mt-4 text-sm text-bone-muted">
-                  <span className="text-bone/50">Why it feels true — </span>
+                <p className="mt-4 text-sm">
+                  <span className="text-bone-muted">Why it feels true — </span>
                   {item.why_it_feels_true}
                 </p>
-                <p className="mt-2 text-sm text-bone-muted">
-                  <span className="text-bone/50">What may be happening — </span>
+                <p className="mt-2 text-sm">
+                  <span className="text-bone-muted">What may be happening — </span>
                   {item.what_may_be_happening}
                 </p>
               </div>
@@ -144,12 +153,10 @@ export function DossierView({
           <div className="mt-6 space-y-4">
             {dossier.predictions.map((p, i) => (
               <div key={i} className="border border-line p-5 sm:p-6">
-                <p className="text-sm text-bone/50">When</p>
-                <p className="mt-1 text-base font-light">{p.situation}</p>
-                <p className="mt-4 text-sm text-bone/50">You&apos;ll likely</p>
-                <p className="mt-1 text-base font-light text-bone-muted">
-                  {p.prediction}
-                </p>
+                <p className="text-sm text-bone-muted">When</p>
+                <p className="mt-1 text-base">{p.situation}</p>
+                <p className="mt-4 text-sm text-bone-muted">You&apos;ll likely</p>
+                <p className="mt-1 text-base">{p.prediction}</p>
               </div>
             ))}
           </div>
@@ -163,7 +170,7 @@ export function DossierView({
             {dossier.action_plan.map((step, i) => (
               <li
                 key={i}
-                className="text-base font-light leading-relaxed pl-2 marker:text-bone/40"
+                className="text-base leading-snug pl-2 marker:text-bone-muted"
               >
                 {step}
               </li>
@@ -172,7 +179,7 @@ export function DossierView({
         </section>
       )}
 
-      <footer className="mt-16 sm:mt-20 border-t border-line pt-8 pb-safe text-xs text-bone/40">
+      <footer className="mt-16 sm:mt-20 border-t border-line pt-8 pb-safe text-xs text-bone-muted">
         Continue the conversation in your advisor.
       </footer>
     </article>
@@ -181,7 +188,7 @@ export function DossierView({
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-[11px] tracking-[0.2em] uppercase text-bone/50">
+    <h2 className="text-[11px] tracking-[0.2em] uppercase text-bone-muted font-medium">
       {children}
     </h2>
   );
@@ -194,7 +201,7 @@ function ThreeList({ title, items }: { title: string; items?: string[] }) {
       <SectionTitle>{title}</SectionTitle>
       <ul className="mt-4 space-y-2">
         {items.map((item, i) => (
-          <li key={i} className="text-base font-light leading-relaxed pl-4 border-l border-line">
+          <li key={i} className="text-base leading-snug pl-4 border-l border-line">
             {item}
           </li>
         ))}
@@ -206,10 +213,10 @@ function ThreeList({ title, items }: { title: string; items?: string[] }) {
 function MapCell({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10px] tracking-[0.16em] uppercase text-bone/40">
+      <p className="text-[10px] tracking-[0.16em] uppercase text-bone-muted">
         {label}
       </p>
-      <p className="mt-1 font-light">{value}</p>
+      <p className="mt-1">{value}</p>
     </div>
   );
 }

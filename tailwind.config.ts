@@ -11,23 +11,23 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          0: "#050505",
-          50: "#0B0B0B",
-          100: "#111111",
-          200: "#161616",
-          300: "#1C1C1C",
-          400: "#242424",
+          0: "#000000",
+          50: "#000000",
+          100: "#0A0A0A",
+          200: "#111111",
+          300: "#161616",
+          400: "#1A1A1A",
         },
         bone: {
-          DEFAULT: "#F5F5F5",
-          muted: "rgba(245,245,245,0.55)",
-          subtle: "rgba(245,245,245,0.35)",
-          faint: "rgba(245,245,245,0.15)",
+          DEFAULT: "#FFFFFF",
+          muted: "rgba(255,255,255,0.45)",
+          subtle: "rgba(255,255,255,0.28)",
+          faint: "rgba(255,255,255,0.12)",
         },
         line: {
-          DEFAULT: "rgba(255,255,255,0.08)",
-          strong: "rgba(255,255,255,0.16)",
-          faint: "rgba(255,255,255,0.04)",
+          DEFAULT: "rgba(255,255,255,0.12)",
+          strong: "rgba(255,255,255,0.22)",
+          faint: "rgba(255,255,255,0.06)",
         },
       },
       fontFamily: {
@@ -45,11 +45,9 @@ const config: Config = {
         widest2: "0.32em",
       },
       animation: {
-        "grain": "grain 8s steps(10) infinite",
-        "shimmer": "shimmer 3s linear infinite",
+        grain: "grain 8s steps(10) infinite",
+        shimmer: "shimmer 3s linear infinite",
         "fade-up": "fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        "scan": "scan 6s linear infinite",
-        "pulse-slow": "pulseSlow 4s ease-in-out infinite",
       },
       keyframes: {
         grain: {
@@ -72,18 +70,6 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(24px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        scan: {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(100%)" },
-        },
-        pulseSlow: {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "0.9" },
-        },
-      },
-      backgroundImage: {
-        "grid-faint":
-          "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
       },
     },
   },

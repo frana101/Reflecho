@@ -53,6 +53,7 @@ export interface MemorySeed {
 
 export interface CognitiveDossier {
   core_diagnosis: string;
+  one_sentence_truth: string;
   archetype: DossierArchetype;
   drivers: string[];
   threats: string[];
@@ -114,6 +115,7 @@ function migrateLegacyV2(v2: LegacyDossierV2): CognitiveDossier {
 
   return {
     core_diagnosis: v2.core_diagnosis ?? v2.summary ?? "",
+    one_sentence_truth: "",
     archetype: {
       name,
       description: primary?.core_drive ?? "",
@@ -182,7 +184,11 @@ export function dbRowToDossier(row: {
 }): CognitiveDossier {
   const v3 = row.trajectory_analysis?.analysis_v3;
   if (v3) {
-    return { ...v3, memory_seeds: v3.memory_seeds ?? [] };
+    return {
+      ...v3,
+      one_sentence_truth: v3.one_sentence_truth ?? "",
+      memory_seeds: v3.memory_seeds ?? [],
+    };
   }
 
   const v2 = row.trajectory_analysis?.analysis_v2;
@@ -192,6 +198,7 @@ export function dbRowToDossier(row: {
 
   return {
     core_diagnosis: row.summary ?? "",
+    one_sentence_truth: "",
     archetype: {
       name: "The Strategist",
       description: "",

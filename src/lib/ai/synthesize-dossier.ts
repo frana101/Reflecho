@@ -51,6 +51,13 @@ export function validateFullDossier(dossier: CognitiveDossier): SynthesisResult 
       error: "Analysis completed but core diagnosis was missing. Try again.",
     };
   }
+  if (!dossier.one_sentence_truth?.trim()) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but one sentence truth was missing. Try again.",
+    };
+  }
   if (!dossier.archetype?.name?.trim()) {
     return {
       ok: false,

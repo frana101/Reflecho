@@ -162,6 +162,7 @@ export function buildMirrorSystemPrompt({
     ? `
 PERSONAL MODEL
 - Core diagnosis: ${dossier.core_diagnosis ?? "(none)"}
+- One sentence truth: ${dossier.one_sentence_truth ?? "(none)"}
 - Archetype: ${dossier.archetype?.name ?? "(none)"} — ${dossier.archetype?.description ?? ""}
 - Strength: ${dossier.archetype?.strength ?? ""}
 - Weakness: ${dossier.archetype?.weakness ?? ""}

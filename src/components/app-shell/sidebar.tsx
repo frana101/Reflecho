@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export function Sidebar({ displayName }: { displayName: string }) {
   const pathname = usePathname();
   return (
-    <aside className="hidden md:flex w-64 shrink-0 border-r border-line bg-ink-50/40 flex-col">
+    <aside className="hidden md:flex w-64 shrink-0 border-r border-line bg-black flex-col">
       <div className="px-6 py-6 border-b border-line">
         <Link href="/" className="flex items-center gap-3">
           <span className="inline-block h-2 w-2 bg-bone" />
@@ -19,10 +19,10 @@ export function Sidebar({ displayName }: { displayName: string }) {
       </div>
 
       <div className="px-6 py-6 border-b border-line">
-        <div className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
+        <div className="text-[10px] tracking-[0.32em] uppercase text-bone-muted">
           Subject
         </div>
-        <div className="mt-2 text-base font-light tracking-tight truncate">
+        <div className="mt-2 text-base font-medium tracking-tight truncate">
           {displayName}
         </div>
       </div>

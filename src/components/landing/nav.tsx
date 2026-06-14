@@ -24,17 +24,17 @@ export function Nav() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink-0/90 backdrop-blur-xl pt-safe">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-black/95 backdrop-blur-xl pt-safe">
         <div className="mx-auto flex h-14 sm:h-16 max-w-3xl items-center justify-between gap-3 px-4 sm:px-8">
           <Link
             href="/"
-            className="text-sm sm:text-base font-light tracking-tight shrink-0"
+            className="text-sm sm:text-base font-medium tracking-tight shrink-0"
             onClick={() => setOpen(false)}
           >
             Reflecho
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-light text-bone-muted">
+          <nav className="hidden md:flex items-center gap-6 text-sm text-bone-muted">
             {LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -95,7 +95,7 @@ export function Nav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 z-[60] bg-ink-0/98 backdrop-blur-xl"
+            className="md:hidden fixed inset-0 z-[60] bg-black backdrop-blur-xl"
           >
             <div className="flex h-full flex-col pt-[calc(3.5rem+env(safe-area-inset-top,0px))] pb-safe">
               <nav className="flex flex-col px-4 py-4 gap-0 flex-1">
@@ -104,7 +104,7 @@ export function Nav() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="min-h-[52px] flex items-center text-base font-light text-bone border-b border-line"
+                    className="min-h-[52px] flex items-center text-base border-b border-line"
                   >
                     {link.label}
                   </Link>
