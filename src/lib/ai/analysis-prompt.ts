@@ -95,7 +95,7 @@ Each section answers ONE question only:
 
 If a sentence does not improve that answer, delete it.`;
 
-const SYSTEM_CORE = `You are Reflecho's analysis engine.
+const SYSTEM_CORE = `You are Reflechto's analysis engine.
 
 Read the full assessment and produce a personal dossier — a diagnosis, not a personality test.
 

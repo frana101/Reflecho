@@ -15,7 +15,7 @@ export const GPT_5_5 = "gpt-5.5";
 
 export const DEFAULT_MODEL = process.env.OPENAI_MODEL ?? GPT_5_5;
 
-/** Reflecho — defaults to gpt-5.5; override with OPENAI_MIRROR_MODEL. */
+/** Reflechto — defaults to gpt-5.5; override with OPENAI_MIRROR_MODEL. */
 export const MIRROR_MODEL = process.env.OPENAI_MIRROR_MODEL ?? GPT_5_5;
 
 /** GPT-5 family chat models reject non-default temperature; omit the field so the API uses its default. */

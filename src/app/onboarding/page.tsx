@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { IntakeForm } from "@/components/onboarding/intake-form";
 
-export const metadata = { title: "Begin - Reflecho" };
+export const metadata = { title: "Begin - Reflechto" };
 
 export default async function OnboardingEntryPage() {
   const supabase = await createClient();

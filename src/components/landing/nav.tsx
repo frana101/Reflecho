@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "#advisor", label: "How it works" },
   { href: "#why", label: "Why it fails" },
-  { href: "#what", label: "What it does" },
+  { href: "#what", label: "What you get" },
 ];
 
 export function Nav() {
@@ -31,7 +31,7 @@ export function Nav() {
             className="text-sm sm:text-base font-medium tracking-tight shrink-0"
             onClick={() => setOpen(false)}
           >
-            Reflecho
+            Reflechto
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm text-bone-muted">

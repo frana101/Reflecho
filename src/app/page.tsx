@@ -1,11 +1,10 @@
 import { Nav } from "@/components/landing/nav";
 import {
   Hero,
-  AdvisorSection,
-  WhyAdviceFails,
-  WhatItDoes,
-  BuiltForStuck,
-  ClaritySection,
+  AdviceProblem,
+  HowItWorks,
+  WhatYouGet,
+  TriedEverything,
   FinalCta,
 } from "@/components/landing/home-sections";
 import { Footer } from "@/components/landing/footer";
@@ -16,11 +15,10 @@ export default function Page() {
       <Nav />
       <main>
         <Hero />
-        <AdvisorSection />
-        <WhyAdviceFails />
-        <WhatItDoes />
-        <BuiltForStuck />
-        <ClaritySection />
+        <AdviceProblem />
+        <HowItWorks />
+        <WhatYouGet />
+        <TriedEverything />
         <FinalCta />
       </main>
       <Footer />

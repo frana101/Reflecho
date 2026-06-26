@@ -15,7 +15,7 @@ export default function OnboardingLayout({
           <Link href="/" className="flex items-center gap-3 group shrink-0 min-w-0">
             <span className="inline-block h-2 w-2 bg-bone shrink-0" />
             <span className="text-[10px] sm:text-[11px] tracking-[0.22em] sm:tracking-[0.28em] uppercase truncate">
-              Reflecho
+              Reflechto
             </span>
           </Link>
           <div className="flex items-center gap-3 shrink-0">

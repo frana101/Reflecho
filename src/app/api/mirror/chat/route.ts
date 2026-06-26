@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getOpenAI, MIRROR_MODEL, temperatureParam } from "@/lib/ai/openai";
-import { buildMirrorSystemPrompt } from "@/lib/ai/mirror-prompt";
+import { buildAdvisorSystemPrompt } from "@/lib/ai/mirror-prompt";
 import { extractMemoriesFromExchange } from "@/lib/memory/extract";
+import { persistExtractedMemories } from "@/lib/memory/persist";
 import { dbRowToDossier } from "@/lib/types/dossier";
 
 export const runtime = "nodejs";
@@ -58,39 +59,58 @@ export async function POST(req: Request) {
     content: message,
   });
 
-  const [{ data: profile }, { data: dossierRow }, { data: memoryRows }, { data: historyRows }] =
-    await Promise.all([
-      supabase
-        .from("profiles")
-        .select("display_name")
-        .eq("id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("cognitive_dossiers")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("version", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabase
-        .from("cognitive_memory")
-        .select("memory_type, content, evidence, weight, observation_count, last_observed_at")
-        .eq("user_id", user.id)
-        .eq("archived", false)
-        .order("weight", { ascending: false })
-        .limit(40),
-      supabase
-        .from("messages")
-        .select("role, content, created_at")
-        .eq("conversation_id", conversationId)
-        .order("created_at", { ascending: true })
-        .limit(40),
-    ]);
+  const [
+    { data: profile },
+    { data: dossierRow },
+    { data: memoryRows },
+    { data: historyRows },
+    { count: conversationCount },
+    { count: messageCount },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("cognitive_dossiers")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("version", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("cognitive_memory")
+      .select("memory_type, content, evidence, weight, observation_count, last_observed_at")
+      .eq("user_id", user.id)
+      .eq("archived", false)
+      .order("weight", { ascending: false })
+      .limit(40),
+    supabase
+      .from("messages")
+      .select("role, content, created_at")
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: true })
+      .limit(40),
+    supabase
+      .from("conversations")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("messages")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id),
+  ]);
 
-  const systemPrompt = buildMirrorSystemPrompt({
+  const systemPrompt = buildAdvisorSystemPrompt({
     displayName: profile?.display_name ?? "Subject",
     dossier: dossierRow ? dbRowToDossier(dossierRow) : null,
     memory: memoryRows ?? [],
+    relationship: {
+      conversationCount: conversationCount ?? 0,
+      messageCount: messageCount ?? 0,
+      memoryCount: memoryRows?.length ?? 0,
+    },
   });
 
   const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
@@ -111,13 +131,13 @@ export async function POST(req: Request) {
     });
     assistantText = completion.choices[0]?.message?.content?.trim() ?? "";
   } catch (e) {
-    const m = e instanceof Error ? e.message : "Mirror failed.";
+    const m = e instanceof Error ? e.message : "Advisor failed.";
     return NextResponse.json({ error: m }, { status: 500 });
   }
 
   if (!assistantText) {
     return NextResponse.json(
-      { error: "Mirror produced no response." },
+      { error: "Advisor produced no response." },
       { status: 500 },
     );
   }
@@ -135,15 +155,7 @@ export async function POST(req: Request) {
         { role: "user", content: message },
         { role: "assistant", content: assistantText },
       ]);
-      if (!extracted.length) return;
-      const newRows = extracted.map((m) => ({
-        user_id: user.id,
-        memory_type: m.memory_type,
-        content: m.content,
-        evidence: m.evidence,
-        weight: 1.0,
-      }));
-      await supabase.from("cognitive_memory").insert(newRows);
+      await persistExtractedMemories(supabase, user.id, extracted);
     } catch (e) {
       console.error(e);
     }

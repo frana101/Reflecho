@@ -5,7 +5,7 @@ import { DossierView } from "@/components/dossier/dossier-view";
 import { RegenerateDossier } from "@/components/app-shell/regenerate-dossier";
 import { dbRowToDossier } from "@/lib/types/dossier";
 
-export const metadata = { title: "Dossier - Reflecho" };
+export const metadata = { title: "Dossier - Reflechto" };
 
 export default async function DossierPage() {
   const supabase = await createClient();
@@ -34,8 +34,8 @@ export default async function DossierPage() {
           No profile yet.
         </h1>
         <p className="mt-6 text-bone-muted leading-relaxed">
-          Complete the assessment first. The mirror builds your operating model
-          from how you actually decide — not who you say you are.
+          Complete the assessment first. Your advisor uses your report to
+          understand how you actually decide.
         </p>
         <Button asChild size="lg" className="mt-10">
           <Link href="/onboarding">Begin Assessment</Link>

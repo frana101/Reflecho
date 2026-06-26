@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Privacy - Reflecho" };
+export const metadata = { title: "Privacy - Reflechto" };
 
 export default function PrivacyPage() {
   return (
@@ -15,16 +15,16 @@ export default function PrivacyPage() {
         Privacy.
       </h1>
       <p className="mt-8 text-bone-muted font-light leading-relaxed">
-        Reflecho processes deeply personal data. We treat it as such. Your
-        answers, dossier, conversations, and memory cells are stored encrypted
+        Reflechto processes deeply personal data. We treat it as such. Your
+        answers, dossier, and conversations are stored encrypted
         at rest, accessible only to your account, and never shared with third
         parties for advertising. You may export or delete everything at any
         time from your account page.
       </p>
-      <p className="mt-6 text-bone-muted font-light leading-relaxed">
-        We use OpenAI to synthesize your dossier and run the mirror. Per their
+      <p className="mt-6 leading-snug">
+        We use OpenAI to synthesize your dossier and run your advisor. Per their
         API policy, your inputs are not used to train their public models. You
-        are responsible for what you choose to share with the mirror.
+        are responsible for what you choose to share with your advisor.
       </p>
     </div>
   );

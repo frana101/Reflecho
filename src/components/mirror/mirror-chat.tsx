@@ -69,7 +69,7 @@ export function MirrorChat({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Mirror unavailable.");
+      if (!res.ok) throw new Error(data.error ?? "Advisor unavailable.");
       const newConversationId: string = data.conversationId;
       const assistant: string = data.assistant;
       const isNewConv = !conversationId;
@@ -85,10 +85,10 @@ export function MirrorChat({
       ]);
 
       if (isNewConv) {
-        router.replace(`/mirror/${newConversationId}`);
+        router.replace(`/advisor/${newConversationId}`);
       }
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Mirror unavailable.";
+      const msg = e instanceof Error ? e.message : "Advisor unavailable.";
       setError(msg);
       setMessages((m) => m.filter((x) => x.id !== tempUser.id));
       setInput(message);
@@ -103,7 +103,7 @@ export function MirrorChat({
         <div className="flex items-center gap-3 text-[10px] tracking-[0.28em] uppercase text-bone/40 min-w-0">
           <span className="inline-flex items-center gap-2 shrink-0">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-bone animate-pulse-slow" />
-            Mirror
+            Advisor
           </span>
           <span className="h-px w-6 bg-bone/20 shrink-0 hidden sm:block" />
           <span className="truncate">{displayName}</span>
@@ -119,12 +119,12 @@ export function MirrorChat({
         <div className="mx-auto max-w-3xl px-4 sm:px-8 py-8 sm:py-12 space-y-8 sm:space-y-10">
           {messages.length === 0 && !pending && (
             <div className="text-center py-12 sm:py-24">
-              <h2 className="text-2xl sm:text-display-md font-light tracking-tight text-balance">
-                Speak.
+              <h2 className="text-2xl sm:text-display-md font-medium tracking-tight text-balance">
+                Ask your advisor.
               </h2>
-              <p className="mt-6 max-w-md mx-auto text-bone-muted leading-relaxed font-light">
-                The mirror has your dossier. Start anywhere - a thought, a
-                tension, a contradiction. It will read you against itself.
+              <p className="mt-6 max-w-md mx-auto leading-snug">
+                It has your dossier and remembers what you&apos;ve shared. The
+                more you talk, the sharper it gets.
               </p>
             </div>
           )}
@@ -142,7 +142,7 @@ export function MirrorChat({
                 )}
               >
                 <span className="text-[10px] tracking-[0.32em] uppercase text-bone/30">
-                  {m.role === "user" ? displayName : "Mirror"}
+                  {m.role === "user" ? displayName : "Advisor"}
                 </span>
                 <div
                   className={cn(
@@ -173,11 +173,11 @@ export function MirrorChat({
               className="flex flex-col gap-2 items-start"
             >
               <span className="text-[10px] tracking-[0.32em] uppercase text-bone/30">
-                Mirror
+                Advisor
               </span>
               <div className="text-[15px] font-light text-bone-muted">
                 <span className="shimmer-text">
-                  Reading you against the dossier...
+                  Thinking...
                 </span>
               </div>
             </motion.div>
@@ -197,7 +197,7 @@ export function MirrorChat({
         <div className="mx-auto max-w-3xl px-4 sm:px-8 py-4 sm:py-5">
           <Textarea
             ref={inputRef}
-            placeholder="Type to the mirror..."
+            placeholder="Message your advisor..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {

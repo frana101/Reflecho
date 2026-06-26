@@ -14,89 +14,23 @@ export function Hero() {
           transition={{ duration: 0.7 }}
           className="text-[2rem] leading-[1.12] sm:text-[2.75rem] sm:leading-[1.08] font-medium tracking-tight text-balance"
         >
-          Stop Guessing What To Do Next.
+          Finally know your next move.
         </motion.h1>
 
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="mt-8 sm:mt-10 space-y-4 text-base sm:text-lg leading-snug text-bone"
+          className="mt-8 sm:mt-10 text-base sm:text-lg leading-snug text-bone"
         >
-          <p>Most advice isn&apos;t wrong.</p>
-          <p>It&apos;s just not built for you.</p>
-          <p className="pt-2">
-            The internet is full of people telling you what worked for them.
-          </p>
-        </motion.div>
-
-        <motion.ul
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="mt-6 space-y-2 text-base sm:text-lg text-bone"
-        >
-          {[
-            "Start a business.",
-            "Quit your job.",
-            "Wake up earlier.",
-            "Take more risks.",
-            "Play it safe.",
-            "Work harder.",
-            "Slow down.",
-          ].map((line) => (
-            <li key={line}>{line}</li>
-          ))}
-        </motion.ul>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="mt-8 space-y-4 text-base sm:text-lg leading-snug text-bone"
-        >
-          <p>Everyone has advice.</p>
-          <p>Almost none of it takes you into account.</p>
-          <p className="text-bone">That&apos;s the problem.</p>
-        </motion.div>
+          Because the advice is built around you, not the average person.
+        </motion.p>
       </div>
     </section>
   );
 }
 
-export function AdvisorSection() {
-  return (
-    <section id="advisor" className="border-b border-line">
-      <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.7 }}
-        >
-          <h2 className="text-2xl sm:text-4xl font-medium tracking-tight">
-            Meet Your Personal Advisor.
-          </h2>
-          <div className="mt-8 space-y-4 text-base sm:text-lg leading-snug text-bone">
-            <p>
-              Reflecho learns how you think, make decisions, handle pressure,
-              and get stuck.
-            </p>
-            <p>Then it gives advice based on you.</p>
-          </div>
-          <ul className="mt-8 space-y-2 text-base sm:text-lg text-bone">
-            <li>Not the average person.</li>
-            <li>Not some productivity guru.</li>
-            <li>Not a generic AI chatbot.</li>
-          </ul>
-          <p className="mt-8 text-xl sm:text-2xl font-medium text-bone">You.</p>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-export function WhyAdviceFails() {
+export function AdviceProblem() {
   return (
     <section id="why" className="border-b border-line">
       <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
@@ -106,22 +40,22 @@ export function WhyAdviceFails() {
           viewport={{ once: true, margin: "-10%" }}
           transition={{ duration: 0.7 }}
         >
-          <h2 className="text-2xl sm:text-4xl font-medium tracking-tight text-balance">
-            Why Most Advice Fails
-          </h2>
-          <p className="mt-8 text-base sm:text-lg leading-snug text-bone">
-            Because two people can have the same goal and need completely
-            different solutions.
+          <p className="text-base sm:text-lg leading-snug text-bone">
+            Everyone has advice.
           </p>
-          <ul className="mt-8 space-y-3 text-base sm:text-lg leading-snug text-bone">
-            <li>One person needs more confidence.</li>
-            <li>Another needs more discipline.</li>
-            <li>One needs to stop overthinking.</li>
-            <li>Another needs to think things through.</li>
-          </ul>
-          <p className="mt-8 text-base sm:text-lg leading-snug">
-            Most advice treats everyone the same.
-            <span className="block mt-2 font-medium">Reflecho doesn&apos;t.</span>
+          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
+            Start a business. Quit your job. Wake up earlier. Take more risks.
+            Work harder. Slow down.
+          </p>
+          <div className="mt-10 space-y-4 text-base sm:text-lg leading-snug text-bone">
+            <p>Most of it isn&apos;t wrong.</p>
+            <p>It just wasn&apos;t built for you.</p>
+          </div>
+          <p className="mt-10 text-base sm:text-lg leading-snug text-bone">
+            Two people can have the same goal and need completely different
+            guidance. One needs to stop overthinking. The other needs to think
+            things through. Most advice treats them the same. That&apos;s why it
+            doesn&apos;t stick.
           </p>
         </motion.div>
       </div>
@@ -129,68 +63,63 @@ export function WhyAdviceFails() {
   );
 }
 
-const FEATURES = [
-  {
-    title: "Finds your blind spots",
-    body: "The patterns you keep repeating without noticing.",
-  },
-  {
-    title: "Shows what's actually holding you back",
-    body: "Not the symptoms. The cause.",
-  },
-  {
-    title: "Gives advice that fits how you operate",
-    body: "So you can stop forcing strategies that were never built for you.",
-  },
-  {
-    title: "Helps you make better decisions",
-    body: "Career. Business. Money. Relationships. Life. Whatever you're trying to figure out.",
-  },
-];
-
-export function WhatItDoes() {
+export function HowItWorks() {
   return (
-    <section id="what" className="border-b border-line">
+    <section id="advisor" className="border-b border-line">
       <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
           transition={{ duration: 0.7 }}
-          className="text-2xl sm:text-4xl font-medium tracking-tight"
         >
-          What Reflecho Does
-        </motion.h2>
-
-        <div className="mt-12 sm:mt-16 space-y-10">
-          {FEATURES.map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-8%" }}
-              transition={{ duration: 0.6, delay: i * 0.05 }}
-            >
-              <h3 className="text-lg sm:text-xl font-medium">{item.title}</h3>
-              <p className="mt-2 text-base leading-snug text-bone">
-                {item.body}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+          <p className="text-base sm:text-lg leading-snug text-bone">
+            Reflechto learns how you actually think.
+          </p>
+          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
+            Your patterns. Your blind spots. Your real incentives. How you make
+            decisions. Where you get stuck and why.
+          </p>
+          <p className="mt-10 text-base sm:text-lg leading-snug text-bone">
+            Then it gives you guidance built around that — not around the average
+            person, not around what worked for someone else.
+          </p>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-const STUCK_QUESTIONS = [
-  "What should I focus on?",
-  "What am I missing?",
-  "Why do I keep repeating the same mistakes?",
-  "What should I do next?",
-];
+export function WhatYouGet() {
+  return (
+    <section id="what" className="border-b border-line">
+      <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.7 }}
+        >
+          <h2 className="text-2xl sm:text-4xl font-medium tracking-tight">
+            What you get
+          </h2>
+          <p className="mt-8 text-base sm:text-lg leading-snug text-bone">
+            A personal advisor that knows how you operate.
+          </p>
+          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
+            Not a chatbot that gives everyone the same answer. Not a personality
+            test. Not another framework to memorize.
+          </p>
+          <p className="mt-6 text-base sm:text-lg leading-snug font-medium">
+            An advisor that understands you first — then tells you what to do.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 
-export function BuiltForStuck() {
+export function TriedEverything() {
   return (
     <section id="stuck" className="border-b border-line">
       <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
@@ -201,54 +130,18 @@ export function BuiltForStuck() {
           transition={{ duration: 0.7 }}
         >
           <h2 className="text-2xl sm:text-4xl font-medium tracking-tight text-balance">
-            Built For People Who Feel Stuck
+            For people who have tried everything else.
           </h2>
           <p className="mt-8 text-base sm:text-lg leading-snug text-bone">
             You&apos;ve watched the videos. Read the books. Listened to the
-            podcasts. Consumed more advice than most people ever will.
+            podcasts.
           </p>
-          <p className="mt-4 text-base sm:text-lg leading-snug text-bone">
-            Yet you&apos;re still not fully sure:
-          </p>
-          <ul className="mt-6 space-y-3">
-            {STUCK_QUESTIONS.map((q) => (
-              <li
-                key={q}
-                className="text-base sm:text-lg pl-4 border-l border-line"
-              >
-                {q}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-8 text-base sm:text-lg leading-snug">
-            That&apos;s where Reflecho comes in.
-          </p>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-export function ClaritySection() {
-  return (
-    <section className="border-b border-line">
-      <div className="mx-auto max-w-3xl px-4 sm:px-8 py-20 sm:py-28">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.7 }}
-        >
-          <h2 className="text-2xl sm:text-4xl font-medium tracking-tight text-balance">
-            The Goal Isn&apos;t More Information.
-          </h2>
-          <p className="mt-8 text-xl sm:text-2xl font-medium text-bone">
-            It&apos;s clarity.
-          </p>
-          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
-            Because once you&apos;re clear on the right move, action gets much
-            easier.
-          </p>
+          <div className="mt-8 space-y-4 text-base sm:text-lg leading-snug text-bone">
+            <p>You&apos;re not missing information.</p>
+            <p>
+              You&apos;re missing advice that actually accounts for who you are.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -266,17 +159,11 @@ export function FinalCta() {
           transition={{ duration: 0.7 }}
         >
           <h2 className="text-2xl sm:text-4xl font-medium tracking-tight text-balance">
-            Get Your Personal Advisor
+            Start free. Find out how you actually think.
           </h2>
-          <p className="mt-8 text-base sm:text-lg leading-snug text-bone">
-            Stop collecting advice.
-          </p>
-          <p className="mt-2 text-base sm:text-lg leading-snug text-bone">
-            Start getting advice that actually fits you.
-          </p>
           <div className="mt-10 flex justify-center">
-            <Button asChild size="lg" className="w-full sm:w-auto min-h-[48px] sm:min-w-[200px]">
-              <Link href="/auth/sign-up?next=/onboarding">Get Started</Link>
+            <Button asChild size="lg" className="w-full sm:w-auto min-h-[48px] sm:min-w-[220px]">
+              <Link href="/auth/sign-up?next=/onboarding">Enter Reflechto</Link>
             </Button>
           </div>
         </motion.div>

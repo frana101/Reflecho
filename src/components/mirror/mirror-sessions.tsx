@@ -46,7 +46,7 @@ export function MirrorSessionsShell({
       {conversations.map((c) => (
         <li key={c.id}>
           <Link
-            href={`/mirror/${c.id}`}
+            href={`/advisor/${c.id}`}
             onClick={() => setOpen(false)}
             className={cn(
               "block px-4 py-4 border-b border-line transition-colors min-h-[56px] lg:px-6",
@@ -69,7 +69,7 @@ export function MirrorSessionsShell({
 
   return (
     <div className="flex flex-col h-[calc(100dvh-3.5rem)] md:h-screen min-h-0">
-      <div className="lg:hidden shrink-0 border-b border-line bg-ink-50/30 px-4 py-3 flex items-center justify-between gap-3">
+      <div className="lg:hidden shrink-0 border-b border-line px-4 py-3 flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -78,7 +78,7 @@ export function MirrorSessionsShell({
           Sessions ({conversations.length})
         </button>
         <Button asChild size="sm" variant="outline" className="min-h-[44px]">
-          <Link href="/mirror">New chat</Link>
+          <Link href="/advisor">New chat</Link>
         </Button>
       </div>
 
@@ -100,7 +100,7 @@ export function MirrorSessionsShell({
             <div className="flex-1 overflow-y-auto">{sessionList}</div>
             <div className="border-t border-line p-4">
               <Button asChild className="w-full min-h-[48px]" variant="outline">
-                <Link href="/mirror" onClick={() => setOpen(false)}>
+                <Link href="/advisor" onClick={() => setOpen(false)}>
                   New chat
                 </Link>
               </Button>
@@ -110,13 +110,13 @@ export function MirrorSessionsShell({
       )}
 
       <div className="grid flex-1 min-h-0 grid-cols-1 lg:grid-cols-[280px_1fr]">
-        <aside className="hidden lg:flex flex-col border-r border-line bg-ink-50/30 min-h-0">
+        <aside className="hidden lg:flex flex-col border-r border-line bg-black min-h-0">
           <div className="px-6 py-5 border-b border-line flex items-center justify-between shrink-0">
             <span className="text-[10px] tracking-[0.28em] uppercase text-bone/40">
               Sessions
             </span>
             <Button asChild size="sm" variant="outline">
-              <Link href="/mirror">New</Link>
+              <Link href="/advisor">New</Link>
             </Button>
           </div>
           <div className="flex-1 overflow-y-auto min-h-0">{sessionList}</div>

@@ -15,7 +15,7 @@ export default function AuthLayout({
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <span className="inline-block h-2 w-2 bg-bone" />
             <span className="text-[10px] sm:text-[11px] tracking-[0.22em] sm:tracking-[0.28em] uppercase">
-              Reflecho
+              Reflechto
             </span>
           </Link>
           <SignOutButton />

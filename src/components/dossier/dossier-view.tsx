@@ -180,7 +180,7 @@ export function DossierView({
       )}
 
       <footer className="mt-16 sm:mt-20 border-t border-line pt-8 pb-safe text-xs text-bone-muted">
-        Continue the conversation in your advisor.
+        Continue the conversation with your advisor.
       </footer>
     </article>
   );

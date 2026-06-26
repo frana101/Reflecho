@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { RedoReconstruction } from "@/components/app-shell/redo-reconstruction";
 import { RegenerateDossier } from "@/components/app-shell/regenerate-dossier";
 
-export const metadata = { title: "Account - Reflecho" };
+export const metadata = { title: "Account - Reflechto" };
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -35,8 +35,8 @@ export default async function AccountPage() {
           label="Tier"
           value={
             profile?.subscription_tier === "mirror"
-              ? "Mirror (Full)"
-              : "Surface (Free)"
+              ? "Full access"
+              : "Free"
           }
         />
         <Row
@@ -60,12 +60,12 @@ export default async function AccountPage() {
           <div className="text-[10px] tracking-[0.32em] uppercase text-bone/40">
             Upgrade
           </div>
-          <h2 className="mt-4 text-display-md font-light tracking-tight">
-            Activate Mirror tier.
+          <h2 className="mt-4 text-display-md font-medium tracking-tight">
+            Upgrade
           </h2>
-          <p className="mt-4 text-bone-muted leading-relaxed max-w-md">
-            Full reconstruction, unlimited mirror chat, evolving memory,
-            trajectory analysis.
+          <p className="mt-4 leading-snug max-w-md">
+            Full assessment, unlimited advisor chat, and deeper insights over
+            time.
           </p>
           <Button asChild size="lg" className="mt-8">
             <Link href="/#pricing">View Tiers</Link>

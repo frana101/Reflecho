@@ -23,7 +23,7 @@ export function MobileNav({ displayName }: { displayName: string }) {
 
   const current =
     APP_NAV_ITEMS.find((item) => isNavActive(pathname, item.href))?.label ??
-    "Reflecho";
+    "Reflechto";
 
   return (
     <>
@@ -32,7 +32,7 @@ export function MobileNav({ displayName }: { displayName: string }) {
           <Link href="/app" className="flex items-center gap-2 min-w-0">
             <span className="inline-block h-2 w-2 bg-bone shrink-0" />
             <span className="text-[10px] tracking-[0.22em] uppercase truncate">
-              Reflecho
+              Reflechto
               <span className="text-bone/40 normal-case tracking-normal">
                 {" "}
                 / {current}
