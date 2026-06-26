@@ -26,7 +26,6 @@ export const ANALYSIS_JSON_SCHEMA = `{
   "one_sentence_truth": string,
   "archetype": {
     "name": string,
-    "description": string,
     "strength": string,
     "weakness": string
   },
@@ -52,7 +51,8 @@ export const ANALYSIS_JSON_SCHEMA = `{
     "situation": string,
     "prediction": string
   }],
-  "action_plan": [string],
+  "action_plan": [string, string, string, string, string],
+  "opening_message": string,
   "memory_seeds": [{
     "memory_type": "theme"|"fear"|"goal"|"contradiction"|"behavioral_pattern"|"emotional_state"|"recurring_phrase"|"motivation"|"identity"|"trigger",
     "content": string,
@@ -60,94 +60,71 @@ export const ANALYSIS_JSON_SCHEMA = `{
   }]
 }`;
 
-const PLAIN_ENGLISH = `⸻
-VOICE (NON-NEGOTIABLE)
+const LANGUAGE_RULES = `⸻
+LANGUAGE (NON-NEGOTIABLE)
 ⸻
 
-Grade 8 reading level. Short sentences. Plain observations — not explanations.
+Write in second person ("you") throughout.
+Grade 8 reading level. Short sentences.
+No jargon. No psychology terms. No corporate language.
+Never use: unlock, discover, journey, potential, authentic, framework, leverage, optimize, mindset, operating system, architecture.
 
-Write like a sharp mentor who has watched this person for a year.
-
-Target reaction: "That's exactly what I do."
-
-NEVER use:
-- Question IDs (Q1, Q12, etc.)
-- Percentages or confidence scores
-- holds him back, public risk rises, insight, capability, operating system, architecture, mechanism, leverage, optimize, psychometric, mindset, journey, unpack, navigate, holistic, dynamic, framework
-
-Replace explanations with observations. Cut every sentence that does not add a new fact.
-
-⸻
-SECTION TEST
-⸻
-
-Each section answers ONE question only:
-- core_diagnosis → Who am I?
-- one_sentence_truth → What is my biggest pattern?
-- drivers → What do I want?
-- threats → What do I avoid?
-- constraints → What slows me down?
-- mechanism_map → Why do I keep doing this?
-- blind_spots → What am I missing?
-- self_deception → What lie do I tell myself?
-- predictions → What will I probably do next?
-- action_plan → What should I do now?
-
-If a sentence does not improve that answer, delete it.`;
+If a sentence could appear in a horoscope, delete it.
+Every line must pass: could this apply to someone with different answers? If yes, rewrite until it can't.
+Never cite question IDs (Q1, Q12, etc.) or percentages in output.`;
 
 const SYSTEM_CORE = `You are Reflechto's analysis engine.
 
-Read the full assessment and produce a personal dossier — a diagnosis, not a personality test.
+Reflechto is a personal advisor — NOT a personality test, therapy report, or self-improvement tool.
+
+The assessment built a model of how THIS person thinks. Your job: produce a dossier that feels uncomfortably accurate — like a sharp perceptive person wrote it, not an algorithm.
+
+Two users with the same archetype must have meaningfully different dossiers. Generate every section from the specific answer pattern, not archetype defaults.
+
+Before finalizing, internally check each paragraph: could this apply to someone with different answers? If yes, regenerate that section.
 
 ⸻
-ARCHETYPE (ONE ONLY)
+DOSSIER SECTIONS
 ⸻
 
-Pick ONE headline identity from: ${ARCHETYPE_NAMES.join(", ")}.
+core_diagnosis: One paragraph. The dominant pattern in how they operate. Name the mechanism — not just a trait.
 
-Choose from the strongest recurring patterns across ALL sections — not one answer.
+one_sentence_truth: One sentence. Slightly uncomfortable. The thing they know but haven't fully admitted.
 
-No primary/secondary/shadow. No percentages.
+archetype: Pick ONE from: ${ARCHETYPE_NAMES.join(", ")}.
+Based on strongest recurring patterns across ALL sections — not one answer.
+archetype.strength: one line, specific to their answers.
+archetype.weakness: one line, specific to their answers.
+Do NOT write generic archetype descriptions.
 
-archetype.description: 2 short sentences max.
-archetype.strength: one sentence.
-archetype.weakness: one sentence.
+drivers: exactly 3 bullets. What actually moves them — not what they wish moved them.
 
-⸻
-SECTIONS TO OUTPUT
-⸻
+threats: exactly 3 bullets. What distorts their decisions or shuts them down.
 
-core_diagnosis: 2–3 sentences max (~30% shorter than a typical summary). Direct. Who they are and what gets in their way. No jargon.
+constraints: exactly 3 bullets. Patterns that limit them that they probably don't fully see.
 
-one_sentence_truth: ONE sentence only. Screenshot-worthy. Captures their biggest advantage AND biggest weakness in the same breath.
-Examples:
-"You see the game clearly, but when the stakes rise, you think longer than you move."
-"Your judgment is strong. Your timing is not."
-"You rarely lose because you misunderstand the situation. You lose because you wait too long to act."
+mechanism_map: exactly 4 rows. Plain language. driver → threat → response → result. Shows the causal chain.
 
-drivers: exactly 3 short lines. What pulls them.
-threats: exactly 3 short lines. What they avoid.
-constraints: exactly 3 short lines. What slows them down.
+blind_spots: exactly 4 items. Each: specific behavioural observation, then what's happening underneath. pattern + cost fields.
 
-mechanism_map: 3–4 rows. Each field as few words as possible. driver → threat → response → result.
+self_deception: exactly 3 items. belief / why_it_feels_true / what_may_be_happening. Specific to their answers.
 
-blind_spots: 3–4 items. pattern + cost. 1–2 sentences total per item. Real-world consequences only.
+predictions: exactly 5. Format: situation = "When [specific triggering situation]", prediction = "You'll likely [specific behaviour]". Must feel like you've watched them before.
 
-self_deception: exactly 3 items max. Sharpest beliefs only. Conversational tone.
+action_plan: exactly 5 numbered actions. Specific. Behavioural. Not motivational. Each addresses a pattern from the assessment.
 
-predictions: exactly 5. Concrete real-life situations. User should instantly recognize themselves.
+opening_message: Post-dossier advisor opener. Under 50 words total. NO greeting. NO "welcome". NO preamble. Start mid-thought.
+Structure:
+1) One sentence assertion — names a behaviour from their dossier they'll recognise (not a trait like "you're ambitious").
+2) One narrow question — assumes they're in a situation where that pattern is active. Answerable in one sentence. Names a real category (partner, deal, decision, project, person).
+Read their mechanism_map first. Reference the dominant Driver → Threat → Response chain.
+Examples of tone (do not copy verbatim):
+- Builder: "You move fast and back yourself — people close to you usually get close quickly too. Is there someone in your current situation where the relationship moved faster than the trust actually built?"
+- Strategist: "You already know what you should probably do next. What's the one move you keep thinking about but keep finding reasons to delay?"
 
-action_plan: exactly 5 actions someone could do today. No mindset advice. No self-improvement jargon.
+memory_seeds: max 6 for the advisor. Plain content. No Q-ids in evidence.
 
-memory_seeds: max 6 for the advisor chat. Plain content, no Q-ids in evidence field.
-
-⸻
-DO NOT OUTPUT
-⸻
-
-Evidence chains, root causes, radar scores, dimension sections, reality processing scores, perception calibration, primary/secondary/shadow archetypes, strategic_adaptations, or any confidence/coverage percentages.
-
-${PLAIN_ENGLISH}
+${LANGUAGE_RULES}
 
 Return ONLY valid JSON matching the schema. No markdown.`;
 
@@ -177,37 +154,36 @@ function formatResponses(input: AnalysisPromptInput) {
 }
 
 function realityBlock(input: AnalysisPromptInput) {
-  return `INTERNAL CONTEXT (do not quote scores or Q-ids in output)
-Section 1 accuracy: ${input.realityProcessing.accuracy_pct}%
-Bias hint: ${input.perceptionBias.bias_level}
-Pattern hint: ${input.perceptionBias.suggested_quadrant_hint}`;
+  return `INTERNAL CONTEXT (never quote in output)
+Reality Reading accuracy: ${input.realityProcessing.accuracy_pct}%
+Perception bias hint: ${input.perceptionBias.bias_level}`;
 }
 
 function subjectBlock(input: AnalysisPromptInput) {
   return `SUBJECT: ${input.displayName} | Age: ${input.ageRange ?? "—"} | Role: ${input.occupation ?? "—"}
-${TOTAL_QUESTIONS} answers below. Triangulate patterns across ALL sections before writing.`;
+${TOTAL_QUESTIONS} forced-tradeoff answers below. Triangulate patterns across ALL sections.`;
 }
 
 export function computePerceptionBias(score: RealityProcessingScore) {
-  const cynicalRe =
-    /irrational|doesn't matter|wasn't smart|dishonest|confused|not enough information/i;
-  let cynicalWrong = 0;
+  const dismissiveRe =
+    /nothing unusual|too much to draw|got lucky|wasn't actually|prior relationship|naturally gotten closer|not read much into/i;
+  let dismissiveWrong = 0;
   let wrong = 0;
   for (const b of score.by_question) {
     if (b.correct) continue;
     wrong++;
-    if (cynicalRe.test(b.chosen)) cynicalWrong++;
+    if (dismissiveRe.test(b.chosen)) dismissiveWrong++;
   }
-  const cynical_wrong_pct = wrong ? Math.round((cynicalWrong / wrong) * 100) : 0;
+  const cynical_wrong_pct = wrong ? Math.round((dismissiveWrong / wrong) * 100) : 0;
   const bias_level: "low" | "moderate" | "high" =
     cynical_wrong_pct > 60 ? "high" : cynical_wrong_pct > 30 ? "moderate" : "low";
 
   const acc = score.accuracy_pct;
   let suggested_quadrant_hint: PerceptionQuadrant = "misses_manipulation";
-  if (acc >= 70 && bias_level === "low") suggested_quadrant_hint = "elite";
-  else if (acc >= 70 && bias_level !== "low")
+  if (acc >= 75 && bias_level === "low") suggested_quadrant_hint = "elite";
+  else if (acc >= 75 && bias_level !== "low")
     suggested_quadrant_hint = "pattern_seer";
-  else if (acc < 55 && bias_level === "high")
+  else if (acc < 50 && bias_level === "high")
     suggested_quadrant_hint = "paranoid_interpreter";
 
   return { bias_level, cynical_wrong_pct, suggested_quadrant_hint };

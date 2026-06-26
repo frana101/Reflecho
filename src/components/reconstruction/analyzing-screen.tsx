@@ -8,10 +8,10 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 
 const STAGES = [
   "Reading your answers...",
+  "Mapping how you decide...",
   "Finding your patterns...",
-  "Writing your one sentence truth...",
-  "Choosing your archetype...",
-  "Building your action plan...",
+  "Writing your report...",
+  "Preparing your advisor...",
 ];
 
 function friendlyError(message: string) {

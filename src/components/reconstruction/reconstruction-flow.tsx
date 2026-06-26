@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
@@ -69,13 +69,6 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
   const question = QUESTIONS[index];
   const answer = answers[question.id] ?? {};
 
-  const completed = useMemo(
-    () =>
-      QUESTIONS.filter((q) => isAnswerValid(q, answers[q.id] ?? {})).length,
-    [answers],
-  );
-
-  const progress = Math.round((completed / total) * 100);
   const valid = isAnswerValid(question, answer);
 
   const persistAnswer = async (q: Question) => {
@@ -213,22 +206,6 @@ export function ReconstructionFlow({ displayName, initialAnswers }: Props) {
             <span className="text-[10px] tracking-[0.28em] uppercase text-bone-muted tabular-nums">
               {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
-          </div>
-          <div className="h-px w-full bg-line relative overflow-hidden sm:hidden">
-            <motion.div
-              initial={false}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-y-0 left-0 bg-bone"
-            />
-          </div>
-          <div className="hidden md:block h-px w-32 bg-line relative overflow-hidden">
-            <motion.div
-              initial={false}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-y-0 left-0 bg-bone"
-            />
           </div>
         </div>
       </div>

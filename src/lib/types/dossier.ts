@@ -7,7 +7,7 @@ export type PerceptionQuadrant =
 
 export interface DossierArchetype {
   name: string;
-  description: string;
+  description?: string;
   strength: string;
   weakness: string;
 }
@@ -63,6 +63,7 @@ export interface CognitiveDossier {
   self_deception: SelfDeceptionItem[];
   predictions: PredictionItem[];
   action_plan: string[];
+  opening_message: string;
   memory_seeds: MemorySeed[];
 }
 
@@ -156,6 +157,7 @@ function migrateLegacyV2(v2: LegacyDossierV2): CognitiveDossier {
         prediction: p.prediction ?? "",
       })) ?? [],
     action_plan: v2.strategic_adaptations?.slice(0, 5) ?? [],
+    opening_message: "",
     memory_seeds: v2.memory_seeds ?? [],
   };
 }
@@ -187,6 +189,7 @@ export function dbRowToDossier(row: {
     return {
       ...v3,
       one_sentence_truth: v3.one_sentence_truth ?? "",
+      opening_message: v3.opening_message ?? "",
       memory_seeds: v3.memory_seeds ?? [],
     };
   }
@@ -213,6 +216,7 @@ export function dbRowToDossier(row: {
     self_deception: [],
     predictions: [],
     action_plan: [],
+    opening_message: "",
     memory_seeds: [],
   };
 }

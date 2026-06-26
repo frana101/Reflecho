@@ -65,11 +65,52 @@ export function validateFullDossier(dossier: CognitiveDossier): SynthesisResult 
       error: "Analysis completed but archetype was missing. Try again.",
     };
   }
-  if (!dossier.drivers?.length || !dossier.action_plan?.length) {
+  if (!dossier.opening_message?.trim()) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but opening message was missing. Try again.",
+    };
+  }
+  if (
+    !dossier.drivers?.length ||
+    !dossier.threats?.length ||
+    !dossier.constraints?.length ||
+    !dossier.action_plan?.length ||
+    dossier.action_plan.length < 5
+  ) {
     return {
       ok: false,
       kind: "incomplete",
       error: "Analysis completed but the report was incomplete. Try again.",
+    };
+  }
+  if (!dossier.mechanism_map?.length || dossier.mechanism_map.length < 4) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but mechanism map was incomplete. Try again.",
+    };
+  }
+  if (!dossier.blind_spots?.length || dossier.blind_spots.length < 4) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but blind spots were incomplete. Try again.",
+    };
+  }
+  if (!dossier.self_deception?.length || dossier.self_deception.length < 3) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but self-deception section was incomplete. Try again.",
+    };
+  }
+  if (!dossier.predictions?.length || dossier.predictions.length < 5) {
+    return {
+      ok: false,
+      kind: "incomplete",
+      error: "Analysis completed but predictions were incomplete. Try again.",
     };
   }
   return { ok: true, dossier, raw: "" };

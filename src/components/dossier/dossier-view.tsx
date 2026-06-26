@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import type { CognitiveDossier } from "@/lib/types/dossier";
 
 interface Props {
@@ -179,8 +180,13 @@ export function DossierView({
         </section>
       )}
 
-      <footer className="mt-16 sm:mt-20 border-t border-line pt-8 pb-safe text-xs text-bone-muted">
-        Continue the conversation with your advisor.
+      <footer className="mt-16 sm:mt-20 border-t border-line pt-8 pb-safe">
+        <p className="text-sm leading-snug">
+          Your advisor already has this report.{" "}
+          <Link href="/advisor" className="underline underline-offset-4 hover:text-bone-muted">
+            Continue the conversation →
+          </Link>
+        </p>
       </footer>
     </article>
   );

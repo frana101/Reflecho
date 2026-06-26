@@ -19,12 +19,16 @@ interface Props {
   initialConversationId?: string | null;
   initialMessages: ChatMessage[];
   displayName: string;
+  openingMessage?: string | null;
+  showOpeningMessage?: boolean;
 }
 
 export function MirrorChat({
   initialConversationId,
   initialMessages,
   displayName,
+  openingMessage,
+  showOpeningMessage = false,
 }: Props) {
   const router = useRouter();
   const [conversationId, setConversationId] = useState<string | null>(
@@ -118,14 +122,31 @@ export function MirrorChat({
       <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
         <div className="mx-auto max-w-3xl px-4 sm:px-8 py-8 sm:py-12 space-y-8 sm:space-y-10">
           {messages.length === 0 && !pending && (
-            <div className="text-center py-12 sm:py-24">
-              <h2 className="text-2xl sm:text-display-md font-medium tracking-tight text-balance">
-                Ask your advisor.
-              </h2>
-              <p className="mt-6 max-w-md mx-auto leading-snug">
-                It has your dossier and remembers what you&apos;ve shared. The
-                more you talk, the sharper it gets.
-              </p>
+            <div className="space-y-8">
+              {showOpeningMessage && openingMessage ? (
+                <div className="flex flex-col gap-2 items-start">
+                  <span className="text-[10px] tracking-[0.32em] uppercase text-bone-muted">
+                    Advisor
+                  </span>
+                  <div className="max-w-full md:max-w-[85%] text-[15px] leading-relaxed">
+                    <div className="prose-mirror">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {openingMessage}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12 sm:py-24">
+                  <h2 className="text-2xl sm:text-display-md font-medium tracking-tight text-balance">
+                    Ask your advisor.
+                  </h2>
+                  <p className="mt-6 max-w-md mx-auto leading-snug">
+                    It has your dossier and remembers what you&apos;ve shared. The
+                    more you talk, the sharper it gets.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
