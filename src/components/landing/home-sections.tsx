@@ -77,12 +77,22 @@ export function HowItWorks() {
             Reflechto learns how you actually think.
           </p>
           <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
-            Your patterns. Your blind spots. Your real incentives. How you make
-            decisions. Where you get stuck and why.
+            You start with a short assessment. Not a personality quiz, but a set
+            of situations and tradeoffs that reveal how you actually think, not
+            how you wish you did.
           </p>
-          <p className="mt-10 text-base sm:text-lg leading-snug text-bone">
-            Then it gives you guidance built around that — not around the average
+          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
+            From that, Reflechto builds your personal dossier. Your patterns.
+            Your blind spots. Your real incentives. How you make decisions.
+            Where you get stuck and why.
+          </p>
+          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
+            Then it gives you advice built around that. Not around the average
             person, not around what worked for someone else.
+          </p>
+          <p className="mt-6 text-base sm:text-lg leading-snug text-bone">
+            Every conversation makes it sharper. The more you use it, the more
+            it understands, and the more specific the advice gets.
           </p>
         </motion.div>
       </div>
