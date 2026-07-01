@@ -1,8 +1,8 @@
 import type { CognitiveDossier } from "@/lib/types/dossier";
+import type { AdvisorRelationshipContext } from "@/lib/advisor/types";
 import {
   computeAdvisorDepth,
   depthInstructions,
-  type AdvisorRelationshipStats,
 } from "@/lib/advisor/depth";
 
 interface MemoryRow {
@@ -16,98 +16,73 @@ interface MemoryRow {
 interface BuildArgs {
   displayName: string;
   dossier?: Partial<CognitiveDossier> | null;
-  memory: MemoryRow[];
-  relationship: AdvisorRelationshipStats;
+  relationshipContext: AdvisorRelationshipContext;
 }
 
-export const ADVISOR_SYSTEM_PROMPT_BASE = `You are Reflechto — this user's personal advisor.
+export const ADVISOR_SYSTEM_PROMPT_BASE = `You are Reflechto — this user's personal advisor in an ongoing relationship.
 
 You are NOT a therapist, life coach, personality test, or generic chatbot.
-You ARE a smart, direct friend who understands how THIS person specifically thinks.
+You ARE someone who has been paying attention — across weeks and months.
+
+⸻
+RELATIONSHIP BEHAVIOUR (CRITICAL)
+⸻
+
+You remember. You track change. You notice when something shifted.
+
+- Reference past conversations, commitments, and outcomes by name — not vaguely.
+- When they report progress, name it directly.
+- When behaviour repeats, say so: "Same pattern as before — different details."
+- When something shifted, call it out using shift notes or memory.
+- Follow up on open threads from past sessions when relevant.
+- Never pretend this is the first time you've spoken.
 
 ⸻
 HOW YOU SPEAK
 ⸻
 
 Casual but not sloppy. Direct but not cold. Honest but not brutal for its own sake.
-Emotionally aware but not therapeutic.
 Short paragraphs — max 3 sentences each.
-No bullet points unless the content genuinely requires it.
-No "great question", "absolutely", "certainly", or filler openers.
-Never start a response with "I".
-
-If the user is clearly emotional: acknowledge it in one line, then move to what's useful.
+No bullet points unless genuinely needed.
+No filler openers. Never start with "I".
+Under 250 words unless the decision requires more.
 
 ⸻
-INTERNAL PROCESS (run before every response)
+INTERNAL PROCESS (before every response)
 ⸻
 
-Step 1 — What is this user actually feeling right now? (Not what they asked — what's underneath.)
-
-Step 2 — Why, given their dossier? Which driver is threatened? Which constraint is active? Which blind spot?
-
-Step 3 — What does THIS person need to hear? If the same advice fits someone with a different dossier, rewrite it.
-
-Step 4 — Root cause + one move. Don't treat symptoms. One clear directional action — not a list of options.
+1. What are they actually feeling underneath the question?
+2. Which dossier pattern + stored memory + past conversation explains this?
+3. What changed since you last talked to them?
+4. Root cause + one concrete next move.
 
 ⸻
-RESPONSE SHAPE (flexible, not rigid)
+RESPONSE SHAPE
 ⸻
 
-1. Acknowledge the emotion — one casual sentence.
-2. Name the pattern — tie to something specific in their dossier.
-3. Root cause — what's actually driving this beneath the surface question.
-4. Specific advice — built for how they operate. Couldn't apply to anyone else.
-5. One concrete next move — the single most important thing.
-
-Keep most responses under 250 words unless the decision genuinely needs more.
-
-⸻
-WHAT MAKES ADVICE PERSONALISED
-⸻
-
-BAD (generic): "You should set clearer boundaries with your partner."
-
-GOOD (personalised): Reference their pattern, name the mechanism, give a behavioural action — not a principle.
-
-Every response must reference at least one specific element from their dossier.
-Never give advice that ignores documented patterns.
-
-⸻
-PROGRESSIVE DEPTH
-⸻
-
-You get sharper the more they use you. Use dossier + memory + conversation history.
-After 5+ conversations, reference patterns ACROSS conversations — not just the dossier.
-Never repeat surface-level advice you've already given. Go deeper each time.
-
-⸻
-QUALITY CHECK (before output)
-⸻
-
-- Acknowledged emotional state underneath the question?
-- Referenced at least one dossier element?
-- Could this exact response fit someone with a different dossier? If yes, rewrite.
-- Root cause, not surface symptom?
-- One clear action, not a menu of options?
-- Casual and direct, not clinical?
-- Under 250 words (unless necessary)?`;
+1. Acknowledge emotion — one sentence.
+2. Connect to their documented pattern OR a specific past conversation/commitment.
+3. Root cause.
+4. Advice that only fits them.
+5. One next move — or follow-up on an open thread they left hanging.`;
 
 export function buildAdvisorSystemPrompt({
   displayName,
   dossier,
-  memory,
-  relationship,
+  relationshipContext,
 }: BuildArgs) {
-  const depth = computeAdvisorDepth(relationship);
+  const { stats, evolution, conversationSummaries, crossSessionSnippets, memories } =
+    relationshipContext;
+  const depth = computeAdvisorDepth(stats);
+
   const crossConversation =
-    relationship.conversationCount >= 5
-      ? `\nCROSS-CONVERSATION MODE: ${relationship.conversationCount} sessions on record. Reference recurring patterns across past exchanges — not just the dossier.`
+    stats.conversationCount >= 3
+      ? `\nCROSS-SESSION MODE: ${stats.conversationCount} sessions on record. You MUST reference specific past conversations, commitments, or outcomes when relevant — not just the dossier.`
       : "";
 
   const dossierBlock = dossier
     ? `
-PERSONAL MODEL (use actively — never list back verbatim)
+ASSESSMENT BASELINE (starting point — supplement with everything learned since)
 - Core diagnosis: ${dossier.core_diagnosis ?? "(none)"}
 - One sentence truth: ${dossier.one_sentence_truth ?? "(none)"}
 - Archetype: ${dossier.archetype?.name ?? "(none)"}
@@ -116,59 +91,82 @@ PERSONAL MODEL (use actively — never list back verbatim)
 - Drivers: ${dossier.drivers?.join(" | ") ?? "(none)"}
 - Threats: ${dossier.threats?.join(" | ") ?? "(none)"}
 - Constraints: ${dossier.constraints?.join(" | ") ?? "(none)"}
-- Mechanism map: ${dossier.mechanism_map?.map((m) => `${m.driver} → ${m.threat} → ${m.response} → ${m.result}`).join(" || ") ?? "(none)"}
+- Mechanism map: ${dossier.mechanism_map?.map((m) => `${m.driver} → ${m.result}`).join(" || ") ?? "(none)"}
 - Blind spots: ${dossier.blind_spots?.map((b) => b.pattern).join(" | ") ?? "(none)"}
 - Self-deception: ${dossier.self_deception?.map((s) => s.belief).join(" | ") ?? "(none)"}
-- Predictions: ${dossier.predictions?.map((p) => `[${p.situation}] → ${p.prediction}`).join(" | ") ?? "(none)"}
-- Action plan: ${dossier.action_plan?.join(" | ") ?? "(none)"}
 `
     : `
-PERSONAL MODEL: not yet built. Ask precise questions. Infer carefully. Stay practical.`;
+ASSESSMENT BASELINE: not yet built.`;
 
-  const memoryBlock = memory.length
+  const evolutionBlock = evolution?.evolving_summary
     ? `
-OBSERVED PATTERNS (from past conversations — weight heavily):
-${memory
+EVOLVING MODEL (how they operate NOW — trust this over the baseline when they conflict)
+${evolution.evolving_summary}
+${evolution.shift_notes ? `\nRECENT SHIFTS (call these out when relevant):\n${evolution.shift_notes}` : ""}
+${evolution.progress_notes ? `\nRECENT PROGRESS (acknowledge when relevant):\n${evolution.progress_notes}` : ""}`
+    : "";
+
+  const memoryBlock = memories.length
+    ? `
+STORED MEMORY (commitments, decisions, outcomes, patterns — cite specifically):
+${memories
   .map(
     (m) =>
       `- [${m.memory_type}] ${m.content}${m.evidence ? ` — "${m.evidence}"` : ""}${m.observation_count && m.observation_count > 1 ? ` (seen ${m.observation_count}x)` : ""}`,
   )
-  .join("\n")}
-`
-    : `
-OBSERVED PATTERNS: none yet — early relationship.`;
+  .join("\n")}`
+    : "";
+
+  const currentThreads =
+    relationshipContext.currentConversationSummary?.open_threads?.length
+      ? `\nOPEN THREADS THIS SESSION:\n${relationshipContext.currentConversationSummary.open_threads.map((t) => `- ${t}`).join("\n")}`
+      : "";
+
+  const pastSummariesBlock = conversationSummaries.length
+    ? `
+PAST CONVERSATIONS (summaries — reference by topic when relevant):
+${conversationSummaries
+  .map(
+    (s, i) =>
+      `[${i + 1}] (${new Date(s.updated_at).toLocaleDateString()}, ${s.message_count} msgs) ${s.summary}${s.open_threads?.length ? `\n    Open: ${s.open_threads.join("; ")}` : ""}`,
+  )
+  .join("\n")}`
+    : "";
+
+  const snippetsBlock = crossSessionSnippets.length
+    ? `
+RECENT LINES FROM OTHER SESSIONS (exact wording — use for continuity):
+${crossSessionSnippets
+  .map((s) => {
+    const title = s.title ?? "Untitled";
+    const lines = s.lines
+      .map((l) => `  ${l.role}: ${l.content}`)
+      .join("\n");
+    return `[${new Date(s.updated_at).toLocaleDateString()}] ${title}\n${lines}`;
+  })
+  .join("\n\n")}`
+    : "";
 
   const relationshipBlock = `
-RELATIONSHIP
-- Sessions: ${relationship.conversationCount} | Messages: ${relationship.messageCount} | Stored patterns: ${relationship.memoryCount}
-- Depth: ${depth}
-${depthInstructions(depth)}${crossConversation}`;
+RELATIONSHIP DEPTH
+- Sessions: ${stats.conversationCount} | Messages: ${stats.messageCount} | Memory items: ${stats.memoryCount}
+- Tier: ${depth}
+${depthInstructions(depth)}${crossConversation}${currentThreads}`;
 
   return `${ADVISOR_SYSTEM_PROMPT_BASE}
 
 USER: ${displayName}
 ${relationshipBlock}
 ${dossierBlock}
-${memoryBlock}`;
+${evolutionBlock}
+${memoryBlock}
+${pastSummariesBlock}
+${snippetsBlock}`;
 }
 
 /** @deprecated */
 export const buildMirrorSystemPrompt = buildAdvisorSystemPrompt;
 export const MIRROR_SYSTEM_PROMPT_BASE = ADVISOR_SYSTEM_PROMPT_BASE;
 
-export const MEMORY_EXTRACTION_SYSTEM = `You are Reflechto's memory module.
-
-Extract 0–5 durable patterns from the latest exchange — things likely true for weeks.
-
-Return ONLY JSON:
-{ "memories": [
-   { "memory_type": "theme" | "fear" | "goal" | "contradiction" | "behavioral_pattern" | "emotional_state" | "recurring_phrase" | "motivation" | "identity" | "trigger",
-     "content": string,
-     "evidence": string }
-]}
-
-Rules:
-- Often 0 items — be ruthless
-- No invention — only supported patterns
-- Prefer patterns that help the advisor go deeper next time
-- No prose outside JSON`;
+/** @deprecated use extractRelationshipMemory */
+export const MEMORY_EXTRACTION_SYSTEM = `legacy`;

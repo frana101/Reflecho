@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { clearAdvisorRelationshipData } from "@/lib/advisor/update-relationship";
 import { QUESTIONS, TOTAL_QUESTIONS } from "@/data/questions";
 
 export const runtime = "nodejs";
@@ -48,6 +49,7 @@ export async function POST() {
     return NextResponse.json({ error: dossierErr.message }, { status: 500 });
 
   await supabase.from("cognitive_memory").delete().eq("user_id", user.id);
+  await clearAdvisorRelationshipData(supabase, user.id);
 
   const { error: profileErr } = await supabase
     .from("profiles")

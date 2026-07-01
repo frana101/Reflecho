@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { initializeAdvisorEvolution } from "@/lib/advisor/update-relationship";
 import { computePerceptionBias } from "@/lib/ai/analysis-prompt";
 import { QUESTIONS, TOTAL_QUESTIONS, scoreRealityProcessing } from "@/data/questions";
 
@@ -133,6 +134,12 @@ export async function saveDossier(
       weight: 1.0,
     }));
     await supabase.from("cognitive_memory").insert(memoryRows);
+  }
+
+  try {
+    await initializeAdvisorEvolution(supabase, userId, dossier);
+  } catch (e) {
+    console.error("advisor evolution init failed", e);
   }
 
   await supabase

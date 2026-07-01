@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { clearAdvisorRelationshipData } from "@/lib/advisor/update-relationship";
 
 export const runtime = "nodejs";
 
@@ -17,6 +18,7 @@ export async function POST() {
     .eq("user_id", user.id);
   await supabase.from("cognitive_dossiers").delete().eq("user_id", user.id);
   await supabase.from("cognitive_memory").delete().eq("user_id", user.id);
+  await clearAdvisorRelationshipData(supabase, user.id);
   await supabase.from("conversations").delete().eq("user_id", user.id);
 
   await supabase

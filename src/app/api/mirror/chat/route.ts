@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getOpenAI, MIRROR_MODEL, temperatureParam } from "@/lib/ai/openai";
 import { buildAdvisorSystemPrompt } from "@/lib/ai/mirror-prompt";
-import { extractMemoriesFromExchange } from "@/lib/memory/extract";
-import { persistExtractedMemories } from "@/lib/memory/persist";
+import { loadAdvisorRelationshipContext } from "@/lib/advisor/load-context";
+import {
+  initializeAdvisorEvolution,
+  processExchangeForRelationship,
+} from "@/lib/advisor/update-relationship";
 import { dbRowToDossier } from "@/lib/types/dossier";
 
 export const runtime = "nodejs";
@@ -52,6 +55,10 @@ export async function POST(req: Request) {
       .eq("user_id", user.id);
   }
 
+  if (!conversationId) {
+    return NextResponse.json({ error: "Conversation missing" }, { status: 500 });
+  }
+
   await supabase.from("messages").insert({
     conversation_id: conversationId,
     user_id: user.id,
@@ -59,14 +66,7 @@ export async function POST(req: Request) {
     content: message,
   });
 
-  const [
-    { data: profile },
-    { data: dossierRow },
-    { data: memoryRows },
-    { data: historyRows },
-    { count: conversationCount },
-    { count: messageCount },
-  ] = await Promise.all([
+  const [{ data: profile }, { data: dossierRow }] = await Promise.all([
     supabase
       .from("profiles")
       .select("display_name")
@@ -79,38 +79,33 @@ export async function POST(req: Request) {
       .order("version", { ascending: false })
       .limit(1)
       .maybeSingle(),
-    supabase
-      .from("cognitive_memory")
-      .select("memory_type, content, evidence, weight, observation_count, last_observed_at")
-      .eq("user_id", user.id)
-      .eq("archived", false)
-      .order("weight", { ascending: false })
-      .limit(40),
-    supabase
-      .from("messages")
-      .select("role, content, created_at")
-      .eq("conversation_id", conversationId)
-      .order("created_at", { ascending: true })
-      .limit(40),
-    supabase
-      .from("conversations")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id),
-    supabase
-      .from("messages")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id),
   ]);
+
+  const dossier = dossierRow ? dbRowToDossier(dossierRow) : null;
+
+  const relationshipContext = await loadAdvisorRelationshipContext(
+    supabase,
+    user.id,
+    conversationId,
+  );
+
+  if (dossier && !relationshipContext.evolution) {
+    void initializeAdvisorEvolution(supabase, user.id, dossier).catch(
+      console.error,
+    );
+  }
+
+  const { data: historyRows } = await supabase
+    .from("messages")
+    .select("role, content, created_at")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: true })
+    .limit(40);
 
   const systemPrompt = buildAdvisorSystemPrompt({
     displayName: profile?.display_name ?? "Subject",
-    dossier: dossierRow ? dbRowToDossier(dossierRow) : null,
-    memory: memoryRows ?? [],
-    relationship: {
-      conversationCount: conversationCount ?? 0,
-      messageCount: messageCount ?? 0,
-      memoryCount: memoryRows?.length ?? 0,
-    },
+    dossier,
+    relationshipContext,
   });
 
   const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
@@ -149,20 +144,29 @@ export async function POST(req: Request) {
     content: assistantText,
   });
 
+  const userMessageCount =
+    (historyRows ?? []).filter((m) => m.role === "user").length + 1;
+
   void (async () => {
     try {
-      const extracted = await extractMemoriesFromExchange([
-        { role: "user", content: message },
-        { role: "assistant", content: assistantText },
-      ]);
-      await persistExtractedMemories(supabase, user.id, extracted);
+      await processExchangeForRelationship(
+        supabase,
+        user.id,
+        conversationId,
+        dossier,
+        [
+          { role: "user", content: message },
+          { role: "assistant", content: assistantText },
+        ],
+        userMessageCount,
+      );
     } catch (e) {
       console.error(e);
     }
   })();
 
   return NextResponse.json({
-    conversationId,
+    conversationId: conversationId,
     assistant: assistantText,
   });
 }
