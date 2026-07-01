@@ -105,13 +105,46 @@ constraints: exactly 3 bullets. Patterns that limit them that they probably don'
 
 mechanism_map: exactly 4 rows. Plain language. driver → threat → response → result. Shows the causal chain.
 
-blind_spots: exactly 4 items. Each: specific behavioural observation, then what's happening underneath. pattern + cost fields.
+blind_spots: exactly 4 items. Each targets a different blind spot from THIS user's specific answers — not generic archetype blind spots.
+
+BLIND SPOTS WRITING RULES (NON-NEGOTIABLE):
+The blind spot section must feel like a mirror, not a diagnosis. The user should read each entry and think "I've never said that out loud but it's true" — not "that's an interesting observation about me."
+
+Each entry: one or two sentences max, compressed into pattern field.
+Structure: [What the user does] — [what it feels like when they do it, from inside their own head].
+Name the behaviour AND the inside experience in the same breath. The inside experience creates recognition. Without it, the entry is just a description someone can agree or disagree with.
+
+Example (correct): "You trust people who move with confidence — and it always feels like sharp judgment when you do it, not naivety."
+Example (wrong): "You may trust confident people too quickly."
+
+Rules:
+- Never start an entry with "You may" — it softens the observation into a suggestion and creates distance.
+- No clinical language: no "threat response", "cognitive pattern", "behavioural tendency".
+- Every entry must pass: could this line apply to someone who answered differently? If yes, rewrite until it can't.
+- Discomfort comes from accuracy, not negativity — these are invisible patterns with real costs, not flaws.
+- cost field: one short line naming the real cost of this pattern when it isn't already clear in pattern. Leave empty string if pattern is complete on its own.
 
 self_deception: exactly 3 items. belief / why_it_feels_true / what_may_be_happening. Specific to their answers.
 
 predictions: exactly 5. Format: situation = "When [specific triggering situation]", prediction = "You'll likely [specific behaviour]". Must feel like you've watched them before.
 
-action_plan: exactly 5 numbered actions. Specific. Behavioural. Not motivational. Each addresses a pattern from the assessment.
+action_plan: exactly 5 strings. Every point must have teeth — generic self-help advice is forbidden.
+
+ACTION PLAN WRITING RULES (NON-NEGOTIABLE):
+A point has teeth when it either:
+A) Gives a reframe that changes how they see their situation — making the right move feel obvious, not just telling them what to do
+OR
+B) Inserts a specific physical action at the exact moment they are most likely to skip it — a trigger tied to their documented failure point, not a general best practice
+
+Sequence:
+- Point 1: The reframe. Names their dominant self-deception and shows the other side in one sentence. Makes points 2–5 feel obvious rather than arbitrary.
+- Points 2–4: Specific triggers. Each tied to a documented failure mode from THIS user's answers — not archetype defaults.
+- Point 5: The hardest one. Most leverage, most uncomfortable to commit to. Name why they will avoid it, specific to their pattern.
+
+Rules:
+- Every point must reference something specific from this user's answer pattern. If it could appear in any Builder's or Strategist's dossier unchanged, rewrite it.
+- No point should start with a bare verb ("Ask...", "Wait...", "Make..."). Every instruction needs the mechanism attached — why this action matters for how THIS person is wired.
+- Quality test: read all five — could they appear in a different user's dossier without editing? If yes, rewrite until they couldn't.
 
 opening_message: Post-dossier advisor opener. Under 50 words total. NO greeting. NO "welcome". NO preamble. Start mid-thought.
 Structure:
